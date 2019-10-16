@@ -115,7 +115,7 @@ for (let i = 0; i < character_arr.length; i++){
 
 /************************************* ETAPE 2 *************************************/
 
-////////////////////////////// OBSTACLES //////////////////////////////
+////////////////////////////// MOVES //////////////////////////////
 // MOVE RIGHT
 for (let i = 0; i < 3; i++){
     let row = character1_pos[0] 
@@ -137,6 +137,69 @@ for (let i = 0; i < 3; i++){
     }  
 };
 
+// MOVE LEFT
+for (let i = 0; i < 3; i++){
+    let row = character1_pos[0] 
+    let col = character1_pos[1] - (i + 1)
+    if (col > -1) {
+        if (grid_content[row][col] instanceof Weapon) {
+            if (grid_content[row][col].name === 'bow'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
+            } else if (grid_content[row][col].name === 'axe'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
+            } else if (grid_content[row][col].name === 'sword'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
+            }   
+        } else if (grid_content[row][col] == undefined){
+            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
+        } else {
+            break;
+        }
+    } 
+};
+
+// MOVE UP
+for (let i = 0; i < 3; i++){
+    let row = character1_pos[0] - (i + 1)
+    let col = character1_pos[1] 
+    if (col > -1) {
+        if (grid_content[row][col] instanceof Weapon) {
+            if (grid_content[row][col].name === 'bow'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
+            } else if (grid_content[row][col].name === 'axe'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
+            } else if (grid_content[row][col].name === 'sword'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
+            }   
+        } else if (grid_content[row][col] == undefined){
+            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
+        } else {
+            break;
+        }
+    } 
+};
+
+// MOVE DOWN
+for (let i = 0; i < 3; i++){
+    let row = character1_pos[0] + (i + 1)
+    let col = character1_pos[1] 
+    if (col > -1) {
+        if (grid_content[row][col] instanceof Weapon) {
+            if (grid_content[row][col].name === 'bow'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
+            } else if (grid_content[row][col].name === 'axe'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
+            } else if (grid_content[row][col].name === 'sword'){
+                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
+            }   
+        } else if (grid_content[row][col] == undefined){
+            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
+        } else {
+            break;
+        }
+    } 
+};
+
 ////////////////////////////// FUNCTIONS & LOGS //////////////////////////////
 // Create random Number
 function randomNumber(){
@@ -149,8 +212,8 @@ function weaponOnClick(div, img_to_remove, row, col) {
         grid_content[row][col] = character1;
         grid_content[character1_pos[0]][character1_pos[1]] = undefined;
         $(img_to_remove).remove();  
-        changeDom(div);
-        checkFight();
+        clearAfterClick(div);
+        checkForFight();
     })
 };
 
@@ -160,13 +223,13 @@ function undefinedOnClick (div, row, col) {
     $(div).click(function(){
         grid_content[row][col] = character1;
         grid_content[character1_pos[0]][character1_pos[1]] = undefined;
-        changeDom(div);
-        checkFight();
+        clearAfterClick(div);
+        checkForFight();
     })
 };
 
 // Function moveOnClick
-function changeDom(divs) {
+function clearAfterClick(divs) {
     $('img#character1Img').remove();
     $('div').removeClass('character1');
     $(divs).addClass('character1');
@@ -175,7 +238,7 @@ function changeDom(divs) {
 }
 
 // Function check for fight
-function checkFight(){
+function checkForFight(){
     for (let row = 0; row < grid_content.length; row++) {
         let column = grid_content[row];
         for (let col = 0; col < column.length; col++) {

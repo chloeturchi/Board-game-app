@@ -9,10 +9,50 @@
     </head>
 
     <body>
-
-        <h1 id="title">Jeu de plateau</h1>
-
         <div id="wrapper"></div>
+
+        <div class="counter">
+            <div class="description">
+                <h3>Player 1</h3>
+            </div>
+            <div class="description" id="player-1">
+                <p class="turn">Your turn</p>
+                <p class="weapon_in_hand">arme :</p>
+            </div>
+        </div>
+        <div class="counter">
+            <div class="description">
+                    <h3>Player 2</h3>
+            </div>
+            <div class="description" id="player-2">
+                <p class="turn">-</p>
+                <p class="weapon_in_hand">arme :</p>
+            </div>
+        </div>
+
+        <div class="counter" id="coounter">
+            <h3>Type of weapons</h3>
+            <div class="weapon_type">
+                <img src='assets/img/dagger.svg'/>
+                <p>Dagger :  <br>
+                    10 point</p>
+            </div>
+            <div class="weapon_type">
+                <img src='assets/img/bow.svg'/>
+                <p>Bow :  <br>
+                    20 point</p>
+            </div>
+            <div class="weapon_type"> 
+                <img src='assets/img/axe.svg'/>
+                <p>Axe :  <br>
+                    30 point</p>
+            </div>
+            <div class="weapon_type">
+                <img src='assets/img/sword.svg'/>
+                <p>Sword :  <br>
+                    40 point </p>
+            </div>
+        </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script type="module" src="js/main.js"></script>
