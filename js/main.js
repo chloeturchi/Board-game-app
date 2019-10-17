@@ -162,7 +162,7 @@ for (let i = 0; i < 3; i++){
 for (let i = 0; i < 3; i++){
     let row = character1_pos[0] - (i + 1)
     let col = character1_pos[1] 
-    if (col > -1) {
+    if (row > -1) {
         if (grid_content[row][col] instanceof Weapon) {
             if (grid_content[row][col].name === 'bow'){
                 weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
@@ -183,7 +183,7 @@ for (let i = 0; i < 3; i++){
 for (let i = 0; i < 3; i++){
     let row = character1_pos[0] + (i + 1)
     let col = character1_pos[1] 
-    if (col > -1) {
+    if (row < grid_content.length) {
         if (grid_content[row][col] instanceof Weapon) {
             if (grid_content[row][col].name === 'bow'){
                 weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
@@ -228,7 +228,7 @@ function undefinedOnClick (div, row, col) {
     })
 };
 
-// Function moveOnClick
+// Function clearAfterClick
 function clearAfterClick(divs) {
     $('img#character1Img').remove();
     $('div').removeClass('character1');
