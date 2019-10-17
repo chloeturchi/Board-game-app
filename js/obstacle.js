@@ -1,6 +1,6 @@
 export default class Obstacle {
 
-    constructor(name) {
-        this.name = name;
+    constructor(img) {
+        this.img = img
     }
 };
