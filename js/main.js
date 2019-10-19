@@ -116,92 +116,96 @@ for (let i = 0; i < character_arr.length; i++){
 /************************************* ETAPE 2 *************************************/
 
 ////////////////////////////// MOVES //////////////////////////////
-// MOVE RIGHT
-for (let i = 0; i < 3; i++){
-    let row = character1_pos[0] 
-    let col = character1_pos[1] + (i + 1)
-    if (col < grid_content.length) {
-        if (grid_content[row][col] instanceof Weapon) {
-            if (grid_content[row][col].name === 'bow'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
-            } else if (grid_content[row][col].name === 'axe'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
-            } else if (grid_content[row][col].name === 'sword'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
+move (character2_pos[0], character2_pos[1], character2)
+
+function move (charac_row, charac_col, character) {
+    // MOVE RIGHT
+    for (let i = 0; i < 3; i++){
+        let row = charac_row 
+        let col = charac_col + (i + 1)
+        if (col < grid_content.length) {
+            if (grid_content[row][col] instanceof Weapon) {
+                if (grid_content[row][col].name === 'bow'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, character);
+                } else if (grid_content[row][col].name === 'axe'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col, character);
+                } else if (grid_content[row][col].name === 'sword'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, character);
+                }
+            } else if (grid_content[row][col] == undefined){
+                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, character);
+            } else {
+                break;
             }
-        } else if (grid_content[row][col] == undefined){
-            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
-        } else {
-            break;
-        }
-    }  
-};
+        }  
+    };
 
-// MOVE LEFT
-for (let i = 0; i < 3; i++){
-    let row = character1_pos[0] 
-    let col = character1_pos[1] - (i + 1)
-    if (col > -1) {
-        if (grid_content[row][col] instanceof Weapon) {
-            if (grid_content[row][col].name === 'bow'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
-            } else if (grid_content[row][col].name === 'axe'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
-            } else if (grid_content[row][col].name === 'sword'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
-            }   
-        } else if (grid_content[row][col] == undefined){
-            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
-        } else {
-            break;
-        }
-    } 
-};
+    // MOVE LEFT
+    for (let i = 0; i < 3; i++){
+        let row = charac_row 
+        let col = charac_col - (i + 1)
+        if (col > -1) {
+            if (grid_content[row][col] instanceof Weapon) {
+                if (grid_content[row][col].name === 'bow'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, character);
+                } else if (grid_content[row][col].name === 'axe'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col), character;
+                } else if (grid_content[row][col].name === 'sword'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, character);
+                }   
+            } else if (grid_content[row][col] == undefined){
+                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, character);
+            } else {
+                break;
+            }
+        } 
+    };
 
-// MOVE UP
-for (let i = 0; i < 3; i++){
-    let row = character1_pos[0] - (i + 1)
-    let col = character1_pos[1] 
-    if (row > -1) {
-        if (grid_content[row][col] instanceof Weapon) {
-            if (grid_content[row][col].name === 'bow'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
-                character1.weapon = bow;
-            } else if (grid_content[row][col].name === 'axe'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
-                character1.weapon = axe;
-            } else if (grid_content[row][col].name === 'sword'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
-                character1.weapon = sword;
-            }   
-        } else if (grid_content[row][col] == undefined){
-            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
-        } else {
-            break;
-        }
-    } 
-};
+    // MOVE UP
+    for (let i = 0; i < 3; i++){
+        let row = charac_row - (i + 1)
+        let col = charac_col 
+        if (row > -1) {
+            if (grid_content[row][col] instanceof Weapon) {
+                if (grid_content[row][col].name === 'bow'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, character);
+                    character1.weapon = bow;
+                } else if (grid_content[row][col].name === 'axe'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col, character);
+                    character1.weapon = axe;
+                } else if (grid_content[row][col].name === 'sword'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, character);
+                    character1.weapon = sword;
+                }   
+            } else if (grid_content[row][col] == undefined){
+                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, character);
+            } else {
+                break;
+            }
+        } 
+    };
 
-// MOVE DOWN
-for (let i = 0; i < 3; i++){
-    let row = character1_pos[0] + (i + 1)
-    let col = character1_pos[1] 
-    if (row < grid_content.length) {
-        if (grid_content[row][col] instanceof Weapon) {
-            if (grid_content[row][col].name === 'bow'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col);
-            } else if (grid_content[row][col].name === 'axe'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col);
-            } else if (grid_content[row][col].name === 'sword'){
-                weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col);
-            }   
-        } else if (grid_content[row][col] == undefined){
-            undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
-        } else {
-            break;
-        }
-    } 
-};
+    // MOVE DOWN
+    for (let i = 0; i < 3; i++){
+        let row = charac_row + (i + 1)
+        let col = charac_col
+        if (row < grid_content.length) {
+            if (grid_content[row][col] instanceof Weapon) {
+                if (grid_content[row][col].name === 'bow'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, character);
+                } else if (grid_content[row][col].name === 'axe'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col, character);
+                } else if (grid_content[row][col].name === 'sword'){
+                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, character);
+                }   
+            } else if (grid_content[row][col] == undefined){
+                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col);
+            } else {
+                break;
+            }
+        } 
+    };
+}
 
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 $(".turn").text("-");
@@ -214,38 +218,45 @@ function randomNumber(){
 }
 
 // What to do when click on a weapon
-function weaponOnClick(div, img_to_remove, row, col) {
+function weaponOnClick(div, img_to_remove, row, col, character) {
     $(div).click(function(){
         // change weapon to character
-        grid_content[row][col] = character1;
-        grid_content[character1_pos[0]][character1_pos[1]] = character1.weapon
-        $("#grid-cell-" + character1_pos[0] + "-" + character1_pos[1]).append(character1.weapon.img)
+        grid_content[row][col] = character;
+        grid_content[character1_pos[0]][character1_pos[1]] = character.weapon
+        $("#grid-cell-" + character1_pos[0] + "-" + character1_pos[1]).append(character.weapon.img)
         $("#grid-cell-" + character1_pos[0] + "-" + character1_pos[1]).addClass('weapon');
         $(img_to_remove).remove(); 
-        // 
-        clearAfterClick(div);
+        clearAfterClick(divs, character);
         checkForFight();
     })
 };
 
 // What to do when click on an undefined 
-function undefinedOnClick (div, row, col) {
+function undefinedOnClick (div, row, col, character) {
     $(div).addClass("highlight");
     $(div).click(function(){
-        grid_content[row][col] = character1;
+        grid_content[row][col] = character;
         grid_content[character1_pos[0]][character1_pos[1]] = undefined;
-        clearAfterClick(div);
+        clearAfterClick(div, character);
         checkForFight();
     })
 };
 
 // Function clearAfterClick
-function clearAfterClick(divs) {
-    $('img#character1Img').remove();
-    $('div').removeClass('character1');
-    $(divs).addClass('character1');
-    $(divs).append("<div class='character1 square'><img class='characterImg' id ='character1Img' src='assets/img/perso1.svg'/></div>");
+function clearAfterClick(divs, character) {
     $('div').removeClass('highlight');
+    if (character == character1){
+        $('img#character1Img').remove();
+        $('div').removeClass('character1');
+        $(divs).addClass('character1');
+        $(divs).append("<div class='character1 square'><img class='characterImg' id ='character1Img' src='assets/img/perso1.svg'/></div>");
+    
+    } else if (character == character2){
+        $('img#character2Img').remove();
+        $('div').removeClass('character2');
+        $(divs).addClass('character2');
+        $(divs).append("<div class='character2 square'><img class='characterImg' id ='character2Img' src='assets/img/perso2.svg'/></div>");    
+    }
 }
 
 // Function check for fight
