@@ -68,22 +68,6 @@ body, html {
     color: #474954;
 }
 
-.obstacle {
-    background: rgb(231, 230, 230);
-}
-
-.weapon {
-    background: rgb(204, 255, 211);
-}
-
-.character1 {
-    background: rgb(221, 180, 255);
-}
-
-.character2 {
-    background: rgb(209, 244, 255);
-}
-
 .highlight {
     background : rgb(255, 244, 198);
 }
