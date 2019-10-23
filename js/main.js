@@ -129,125 +129,66 @@ for(let row = 0; row < gridContent.length; row++) {
         }
     } 
     $(grid).append(newRowDiv);
-}; 
-$('#wrapper').append(grid);
+}; $('#wrapper').append(grid);
 
 /************************************* ETAPE 2 *************************************/
 
 ////////////////////////////// MOVES //////////////////////////////
-
 let previousWeapon = [];
 
-if (gridContent[player1Position[0]][player1Position[1] + 1] === undefined ){
-    let nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-    let previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-    $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-    $(nextDiv).click(function(){
-        gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-        $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-        gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-        $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-        $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-        player1Position[1] = player1Position[1] + 1
+const directions = {
+    right: [0, 1],
+    down: [1, 0],
+    left: [0, -1],
+    up: [-1, 0]
+};
 
-        if (gridContent[player1Position[0]][player1Position[1] + 1] === undefined ){
-            nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-            previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-            $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-            $(nextDiv).click(function(){
-                gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-                $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-                gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-                $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-                $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-                player1Position[1] = player1Position[1] + 1
-                nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
+console.log(gridContent);
 
-                if (gridContent[player1Position[0]][player1Position[1] + 1] === undefined ){
-                    nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                    previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-                    $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-                    $(nextDiv).click(function(){
-                        gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-                        $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-                        gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-                        $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-                        $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-                        player1Position[1] = player1Position[1] + 1
-                        nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                        previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-                    });
-                } else if (gridContent[player1Position[0]][player1Position[1] + 1] instanceof Weapon ) {
-                    nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                    previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-                    $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-                    $(nextDiv).click(function(){
-                        previousWeapon.push(player1.weapon);
-                        player1.weapon = gridContent[player1Position[0]][player1Position[1] + 1] // Donner l'arme de la case au joueur
-                        console.log(gridContent);
-                        console.log(previousWeapon);
+function caseManagement (nextRow, nextCol, playerPosition, player) {
+    if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+        return;
+    } 
 
-                        $(nextDiv).empty(); // Enlever l'image du weapon sur l'ancienne case
-                        gridContent[player1Position[0]][player1Position[1] + 1] = undefined
-                        gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-                        $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-                        gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-                        $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-                        $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-                        player1Position[1] = player1Position[1] + 1
-                        nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                        previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-                    });
-                }
-            });
-        } else if (gridContent[player1Position[0]][player1Position[1] + 1] instanceof Weapon ) {
-            nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-            previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-            $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-            $(nextDiv).click(function(){
-                previousWeapon.push(player1.weapon);
-                player1.weapon = gridContent[player1Position[0]][player1Position[1] + 1] // Donner l'arme de la case au joueur
-                console.log(gridContent);
-                console.log(previousWeapon);
+    $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
+        $(`#grid-cell-${nextRow}-${nextCol}`).empty // remove img if there's weapon img in nextDiv
+        $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
+        gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
+        gridContent[nextRow][nextCol] = player
+        $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
+        $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
+        console.log(gridContent); 
+    })
+}
 
-                $(nextDiv).empty(); // Enlever l'image du weapon sur l'ancienne case
-                gridContent[player1Position[0]][player1Position[1] + 1] = undefined
-                gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-                $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-                gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-                $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-                $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-                player1Position[1] = player1Position[1] + 1
-                nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-                previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-            });
-        }
-    });
-} else if (gridContent[player1Position[0]][player1Position[1] + 1] instanceof Weapon) {
-    nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-    previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
-    $(nextDiv).addClass("highlight"); // Ajout de la classe Highlight à la case visée
-    $(nextDiv).click(function(){
-        previousWeapon.push(player1.weapon);
-        player1.weapon = gridContent[player1Position[0]][player1Position[1] + 1] // Donner l'arme de la case au joueur
-        console.log(gridContent);
-        console.log(previousWeapon);
-
-        $(nextDiv).empty(); // Enlever l'image du weapon sur l'ancienne case
-        gridContent[player1Position[0]][player1Position[1] + 1] = undefined
-        gridContent[player1Position[0]][player1Position[1] + 1] = player1; // Ajout de l'instance player à la case cliquée
-        $(nextDiv).append(player1.img); // Ajouter L'image du player sur la case cliquée
-        gridContent[player1Position[0]][player1Position[1]] = undefined// Enlever l'instance player de l'ancienne case
-        $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
-        $(nextDiv).removeClass("highlight") // Enlever la classe à la div actuelle
-        player1Position[1] = player1Position[1] + 1
-        nextDiv = `#grid-cell-${player1Position[0]}-${player1Position[1] + 1}`
-        previousDiv = `#grid-cell-${player1Position[0]}-${player1Position[1]}`
+function moveManagement (playerPosition, player) {
+    Object.values(directions).forEach(function(directionsArrays) {
+        const newRow = directionsArrays[0] + playerPosition[0]
+        const newCol = directionsArrays[1] + playerPosition[1]
+        caseManagement(newRow, newCol, playerPosition, player);
     });
 }
 
-console.log(gridContent);
+moveManagement (player1Position, player1);
+
+
+
+
+
+
+function weaponCheck(player, playerArray) {
+    if (gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon) {
+        previousWeapon.push(player.weapon); // Ajouter l'ancienne arme à un tableau pour ensuite la déposer au prochain tour
+        player.weapon = gridContent[playerArray[0]][playerArray[1] + 1] // Changer l'arme du joueur avec celle ramassée
+    }
+}
+
+function checkFight(playerArray){
+    if (gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player) {
+        console.log(fight);
+    }
+}
 
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 $(".turn").text("-");
@@ -260,7 +201,144 @@ function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
 
+//boucle dans laquelle on passe les détails row et col de chaque endroits 
+
+
 /*
+function moves (player, playerArray) {
+    const [playerRow, playerColumn] = playerArray
+    // Right
+    if (gridContent[playerRow][playerColumn + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+            onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+            weaponCheck(player, playerArray);
+            checkFight(playerArray)
+            
+            if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                    onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                    weaponCheck(player, playerArray);
+                    checkFight(playerArray)
+
+                    if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                            onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)                
+                            weaponCheck(player, playerArray);
+                            checkFight(playerArray)
+                        });
+                    }
+                });
+            }
+        });
+    } 
+
+    // Left
+    if (gridContent[playerArray[0]][playerArray[1] - 1] === undefined || gridContent[playerArray[0]][playerArray[1] - 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] - 1] instanceof Player){
+        $(`#grid-cell-${playerArray[0]}-${playerArray[1] - 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+        $(`#grid-cell-${playerArray[0]}-${playerArray[1] - 1}`).click(function(){
+            onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] - 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+            weaponCheck(player, playerArray);
+            checkFight(playerArray)
+
+            if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                    onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                    weaponCheck(player, playerArray);
+                    checkFight(playerArray)
+                    if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                        $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                            onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)                
+                            weaponCheck(player, playerArray);
+                            checkFight(playerArray)
+                        });
+                    }
+                });
+            }
+        });
+    } 
+
+    // Up
+    if (playerArray[0] - 1 > -1) {
+        if (gridContent[playerArray[0] - 1][playerArray[1]] === undefined || gridContent[playerArray[0] - 1][playerArray[1]] instanceof Weapon || gridContent[playerArray[0] - 1][playerArray[1]] instanceof Player){
+            $(`#grid-cell-${playerArray[0] - 1}-${playerArray[1]}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+            $(`#grid-cell-${playerArray[0] - 1}-${playerArray[1]}`).click(function(){
+                onclick(player, playerArray, `#grid-cell-${playerArray[0] - 1}-${playerArray[1]}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                weaponCheck(player, playerArray);
+                checkFight(playerArray)
+
+                if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                    $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                    $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                        onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                        weaponCheck(player, playerArray);
+                        checkFight(playerArray)
+                        if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                            $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                            $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                                onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)                
+                                weaponCheck(player, playerArray);
+                                checkFight(playerArray)
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    } 
+
+    // Down
+    if (playerArray[0] + 1 < gridContent.length) {
+    if (playerArray[0] + 1 > -1) {
+        if (gridContent[playerArray[0] + 1][playerArray[1]] === undefined || gridContent[playerArray[0] + 1][playerArray[1]] instanceof Weapon || gridContent[playerArray[0] + 1][playerArray[1]] instanceof Player){
+            $(`#grid-cell-${playerArray[0] + 1}-${playerArray[1]}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+            $(`#grid-cell-${playerArray[0] + 1}-${playerArray[1]}`).click(function(){
+                onclick(player, playerArray, `#grid-cell-${playerArray[0] + 1}-${playerArray[1]}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                weaponCheck(player, playerArray);
+                checkFight(playerArray)
+                /*
+                if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                    $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                    $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                        onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)
+                        weaponCheck(player, playerArray);
+                        checkFight(playerArray)
+                        if (gridContent[playerArray[0]][playerArray[1] + 1] === undefined || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon || gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player){
+                            $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).addClass("highlight"); // Ajout de la classe Highlight à la case visée
+                            $(`#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`).click(function(){
+                                onclick(player, playerArray, `#grid-cell-${playerArray[0]}-${playerArray[1] + 1}`, `#grid-cell-${playerArray[0]}-${playerArray[1]}`)                
+                                weaponCheck(player, playerArray);
+                                checkFight(playerArray)
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    } 
+    }
+
+} 
+
+*/
+
+// LE TABLEAU NE SUIT PAS, OK POUR PARTIE AFFICHAGE
+// functions
+
+/*
+function onclick(player, playerArray, nextDiv, previousDiv){
+    gridContent[playerArray[0]][playerArray[1] + 1] = player; // Ajout de l'instance player à la case cliquée
+    $(nextDiv).empty // remove img if there's weapon img in nextDiv
+    $(nextDiv).append(player.img); // Ajouter L'image du player sur la case cliquée
+    gridContent[playerArray[0]][playerArray[1]] = undefined// Enlever l'instance player de l'ancienne case
+    $(previousDiv).empty(); // Enlever l'image du player sur l'ancienne case
+    $("div").removeClass("highlight") // Enlever la classe à la div actuelle
+    playerArray[1] = playerArray[1] + 1 // Set new value to playerArray
+}
 // What to do when click on a weapon
 function weaponOnClick(mainDiv, imgToRemove, row, col, actualPlayer, initialRowPosition, initialColPosition, weaponType) {
     $(mainDiv).addClass("highlight");
@@ -276,9 +354,9 @@ function weaponOnClick(mainDiv, imgToRemove, row, col, actualPlayer, initialRowP
             player.weapon = weaponType;
             $("#weapon-player1").append(player1.weapon.img);
             $(mainDiv).append(player1.img);
-            player1Position[0] = row;
-            player1Position[1] = col;
-            console.log(player1Position);
+            playerArray[0] = row;
+            playerArray[1] = col;
+            console.log(playerArray);
             console.log(gridContent);
             move (player2Position[0], player2Position[1], player2);
     
@@ -290,7 +368,7 @@ function weaponOnClick(mainDiv, imgToRemove, row, col, actualPlayer, initialRowP
             player2Position[1] = col;
             console.log(player2Position);
             console.log(gridContent);
-            move (player1Position[0], player1Position[1], player1);  
+            move (playerArray[0], playerArray[1], player1);  
         }
     })
 };
@@ -306,8 +384,8 @@ function undefinedOnClick (mainDiv, row, col, actualPlayer, initialRowPosition, 
         if (actualPlayer == player1){
             $('img#player1Img').remove();
             $(mainDiv).append(player1.img);
-            player1Position[0] = row;
-            player1Position[1] = col;
+            playerArray[0] = row;
+            playerArray[1] = col;
             move (player2Position[0], player2Position[1], player2);
         
         } else if (actualPlayer == player2){
@@ -315,7 +393,7 @@ function undefinedOnClick (mainDiv, row, col, actualPlayer, initialRowPosition, 
             $(mainDiv).append(player2.img);
             player2Position[0] = row;
             player2Position[1] = col;
-            move (player1Position[0], player1Position[1], player1);  
+            move (playerArray[0], playerArray[1], player1);  
         }
         //checkForFight();
     })
@@ -326,7 +404,7 @@ function undefinedOnClick (mainDiv, row, col, actualPlayer, initialRowPosition, 
         //let upRow = initialRow - 1 // Up
         //let downRow = initialRow + 1 // Down
 
-        if (rightCol < gridContent.length) {
+        if (rightCol < gridContent.length ) {
 
         }
         if (leftCol > -1){
