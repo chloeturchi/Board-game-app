@@ -42,11 +42,21 @@ let player2Position = [];
 
 ////////////////////////////// ADD OBSTACLES, WEAPONS, player IN A GLOBAL ARRAY AND DISPLAY //////////////////////////////
 // Obstacles
+// FAIRE QUE LES OBSTACLES NE PEUVENT PAS SPAWNER EN DIAGONALE !!!
 for (let i = 0; i < obstacleArr.length; i++){
     function displayObstacles(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        if (gridContent[randomRow][randomCol] == undefined) {
+        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) {
+            displayObstacles();
+        } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
+            displayObstacles();
+        } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
+            displayObstacles();
+        } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
+            displayObstacles();
+        // Test if the chosen player area is undefined and push in array
+        } else if (gridContent[randomRow][randomCol] === undefined) {
             gridContent[randomRow][randomCol] = obstacleArr[i];
         } else {
             displayObstacles();
@@ -60,7 +70,7 @@ for (let i = 0; i < weaponArr.length; i++){
     function displayWeapons(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        if (gridContent[randomRow][randomCol] == undefined) {
+        if (gridContent[randomRow][randomCol] === undefined) {
             gridContent[randomRow][randomCol] = weaponArr[i];
         } else {
             displayWeapons();
@@ -74,17 +84,7 @@ for (let i = 0; i < playerArr.length; i++){
     function displayplayer(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        // Test if value around player in Grid Array has Obstacle or player and not push
-        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) {
-            displayplayer();
-        } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
-            displayplayer();
-        } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
-            displayplayer();
-        } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
-            displayplayer();
-        // Test if the chosen player area is undefined and push in array
-        } else if (gridContent[randomRow][randomCol] == undefined){
+        if (gridContent[randomRow][randomCol] === undefined){
             gridContent[randomRow][randomCol] = playerArr[i];
         } else {
             displayplayer();
@@ -134,8 +134,10 @@ for(let row = 0; row < gridContent.length; row++) {
 /************************************* ETAPE 2 *************************************/
 
 ////////////////////////////// MOVES //////////////////////////////
+// Player previous weapon
 let previousWeapon = [];
 
+// Directions
 const directions = {
     right: [0, 1],
     down: [1, 0],
@@ -143,24 +145,8 @@ const directions = {
     up: [-1, 0]
 };
 
-console.log(gridContent);
-
-function caseManagement (nextRow, nextCol, playerPosition, player) {
-    if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
-        return;
-    } 
-
-    $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
-    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
-        $(`#grid-cell-${nextRow}-${nextCol}`).empty // remove img if there's weapon img in nextDiv
-        $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
-        gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
-        gridContent[nextRow][nextCol] = player
-        $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
-        $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
-        console.log(gridContent); 
-    })
-}
+// Set first player turn
+moveManagement (player1Position, player1);
 
 function moveManagement (playerPosition, player) {
     Object.values(directions).forEach(function(directionsArrays) {
@@ -170,25 +156,44 @@ function moveManagement (playerPosition, player) {
     });
 }
 
-moveManagement (player1Position, player1);
-
-
-
-
-
-
-function weaponCheck(player, playerArray) {
-    if (gridContent[playerArray[0]][playerArray[1] + 1] instanceof Weapon) {
-        previousWeapon.push(player.weapon); // Ajouter l'ancienne arme à un tableau pour ensuite la déposer au prochain tour
-        player.weapon = gridContent[playerArray[0]][playerArray[1] + 1] // Changer l'arme du joueur avec celle ramassée
+function caseManagement (nextRow, nextCol, playerPosition, player) {
+    if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+        return;
+    } 
+    if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+        $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+        onCLick (nextRow, nextCol, player, playerPosition); 
+        
+    }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+        console.log('Fight')
     }
 }
 
-function checkFight(playerArray){
-    if (gridContent[playerArray[0]][playerArray[1] + 1] instanceof Player) {
-        console.log(fight);
+function onCLick (nextRow, nextCol, player, playerPosition) {
+    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
+        clicked (nextRow, nextCol, player)
+            $(`#grid-cell-${nextRow}-${nextCol}`).empty() // remove img if there's weapon img in nextDiv
+            $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
+            $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
+
+            gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
+            gridContent[nextRow][nextCol] = player
+
+            $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
+            return;
+    }) 
+}
+
+function clicked (nextRow, nextCol, player){
+    if (gridContent[nextRow][nextCol] instanceof Weapon){
+        previousWeapon.push(player.weapon);
+        player.weapon = gridContent[nextRow][nextCol];
     }
 }
+
+ // faire un check autour après clique pour voir s'il y a un fight / player
+
+// Remettre le  check autour a player et non obstacle car spawn a coté de lautre player possible
 
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 $(".turn").text("-");
@@ -201,7 +206,18 @@ function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
 
-//boucle dans laquelle on passe les détails row et col de chaque endroits 
+    /* if (gridContent[nextRow][nextCol] instanceof Weapon) {
+        previousWeapon.push(player.weapon);
+        player.weapon = gridContent[nextRow][nextCol]
+        console.log(player.weapon);
+        onCLick (nextRow, nextCol, player, playerPosition)
+    } else if (gridContent[nextRow][nextCol] instanceof Player) {
+        console.log('fight');
+        $("div").removeClass("highlight")
+    } else {
+
+    }*/
+
 
 
 /*
@@ -323,13 +339,6 @@ function moves (player, playerArray) {
     }
 
 } 
-
-*/
-
-// LE TABLEAU NE SUIT PAS, OK POUR PARTIE AFFICHAGE
-// functions
-
-/*
 function onclick(player, playerArray, nextDiv, previousDiv){
     gridContent[playerArray[0]][playerArray[1] + 1] = player; // Ajout de l'instance player à la case cliquée
     $(nextDiv).empty // remove img if there's weapon img in nextDiv
@@ -404,19 +413,6 @@ function undefinedOnClick (mainDiv, row, col, actualPlayer, initialRowPosition, 
         //let upRow = initialRow - 1 // Up
         //let downRow = initialRow + 1 // Down
 
-        if (rightCol < gridContent.length ) {
-
-        }
-        if (leftCol > -1){
-
-        }
-        if (upRow > -1){
-
-        }
-        if (downRow < gridContent.length){
-
-        }
-
  // Function one movement
 function movement (initialRow, initialCol, newRow, newCol, actualPlayer, playerPosition){
     let actualDiv = `#grid-cell-${newRow}-${newCol}`
@@ -433,102 +429,7 @@ function movement (initialRow, initialCol, newRow, newCol, actualPlayer, playerP
         console.log(gridContent);
     }); 
 }
-
-//move right
-        if (col < gridContent.length) {
-            if (gridContent[row][col] instanceof Weapon) {
-                if (gridContent[row][col].name === 'bow'){
-                } else if (gridContent[row][col].name === 'axe'){
-                } else if (gridContent[row][col].name === 'sword'){
-                }
-            } else 
-
-    // MOVE LEFT
-    for (let i = 0; i < 3; i++){
-        let row = initialRowPosition 
-        let col = initialColPosition - (i + 1)
-        if (col > -1) {
-            if (gridContent[row][col] instanceof Weapon) {
-                if (gridContent[row][col].name === 'bow'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, actualPlayer, initialRowPosition, initialColPosition, bow);
-                } else if (gridContent[row][col].name === 'axe'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col), actualPlayer, initialRowPosition, initialColPosition, axe;
-                } else if (gridContent[row][col].name === 'sword'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, actualPlayer, initialRowPosition, initialColPosition, sword);
-                }   
-            } else if (gridContent[row][col] == undefined){
-                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, actualPlayer, initialRowPosition, initialColPosition);
-            } else {
-                break;
-            }
-        } 
-    };
-
-    // MOVE UP
-    for (let i = 0; i < 3; i++){
-        let row = initialRowPosition - (i + 1)
-        let col = initialColPosition 
-        if (row > -1) {
-            if (gridContent[row][col] instanceof Weapon) {
-                if (gridContent[row][col].name === 'bow'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, actualPlayer, initialRowPosition, initialColPosition, bow);
-                    player1.weapon = bow;
-                } else if (gridContent[row][col].name === 'axe'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col, actualPlayer, initialRowPosition, initialColPosition, axe);
-                    player1.weapon = axe;
-                } else if (gridContent[row][col].name === 'sword'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, actualPlayer, initialRowPosition, initialColPosition, sword);
-                    player1.weapon = sword;
-                }   
-            } else if (gridContent[row][col] == undefined){
-                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, actualPlayer, initialRowPosition, initialColPosition);
-            } else {
-                break;
-            }
-        } 
-    };
-
-    // MOVE DOWN
-    for (let i = 0; i < 3; i++){
-        let row = initialRowPosition + (i + 1)
-        let col = initialColPosition
-        if (row < gridContent.length) {
-            if (gridContent[row][col] instanceof Weapon) {
-                if (gridContent[row][col].name === 'bow'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#bowImg', row, col, actualPlayer, initialRowPosition, initialColPosition, bow);
-                } else if (gridContent[row][col].name === 'axe'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#axeImg', row, col, actualPlayer, initialRowPosition, initialColPosition, axe);
-                } else if (gridContent[row][col].name === 'sword'){
-                    weaponOnClick ("#grid-cell-" + row + "-" + col, 'img#swordImg', row, col, actualPlayer, initialRowPosition, initialColPosition, sword);
-                }   
-            } else if (gridContent[row][col] == undefined){
-                undefinedOnClick ("#grid-cell-" + row + "-" + col, row, col, actualPlayer, initialRowPosition, initialColPosition);
-            } else {
-                break;
-            }
-        } 
-    };
-} 
-
-// Function check for fight
-function checkForFight(){
-    for (let row = 0; row < gridContent.length; row++) {
-        let column = gridContent[row];
-        for (let col = 0; col < column.length; col++) {
-            if (column[col] instanceof player && column[col].name =='Combattant 1'){
-                if (row + 1 !== gridContent.length && gridContent[row + 1][col] instanceof player) {
-                    console.log('FIGHT');
-                } else if (row - 1 !== gridContent.length && gridContent[row - 1][col] instanceof player){
-                    console.log('FIGHT');
-                } else if (col + 1 !== gridContent.length && gridContent[row][col + 1] instanceof player){
-                    console.log('FIGHT');   
-                } else if (col - 1 !== gridContent.length && gridContent[row][col - 1] instanceof player){
-                    console.log('FIGHT');
-                }
-            }
-        }
-    }
-}; */
+*/
 
 // BUG : ENLEVER LES CLASSES WEAPON, player DES DIVS APRES CHAQUE CLIC
 
