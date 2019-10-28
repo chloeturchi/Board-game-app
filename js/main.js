@@ -47,16 +47,7 @@ for (let i = 0; i < obstacleArr.length; i++){
     function displayObstacles(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) {
-            displayObstacles();
-        } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
-            displayObstacles();
-        } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
-            displayObstacles();
-        } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
-            displayObstacles();
-        // Test if the chosen player area is undefined and push in array
-        } else if (gridContent[randomRow][randomCol] === undefined) {
+        if (gridContent[randomRow][randomCol] == undefined) {
             gridContent[randomRow][randomCol] = obstacleArr[i];
         } else {
             displayObstacles();
@@ -84,13 +75,24 @@ for (let i = 0; i < playerArr.length; i++){
     function displayplayer(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        if (gridContent[randomRow][randomCol] === undefined){
+        // Test if value around player in Grid Array has Obstacle or player and not push
+        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) {
+            displayplayer();
+        } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
+            displayplayer();
+        } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
+            displayplayer();
+        } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
+            displayplayer();
+        // Test if the chosen player area is undefined and push in array
+        } else if (gridContent[randomRow][randomCol] == undefined){
             gridContent[randomRow][randomCol] = playerArr[i];
         } else {
             displayplayer();
         }
     } displayplayer();
 };
+
 
 ////////////////////////////// DISPLAY GRID //////////////////////////////
 // DISPLAY OBSTACLES, WEAPONS, playerS
@@ -132,23 +134,9 @@ for(let row = 0; row < gridContent.length; row++) {
 }; $('#wrapper').append(grid);
 
 /************************************* ETAPE 2 *************************************/
-
-////////////////////////////// WEAPONS//////////////////////////////
+////////////////////////////// WEAPONS //////////////////////////////
 // Player previous weapon // 
 let previousWeapon = [];
-
-// What to do when player click on a weapon //
-function weaponClicked (nextRow, nextCol, player){
-    if (gridContent[nextRow][nextCol] instanceof Weapon){
-        previousWeapon.push(player.weapon);
-        $("#" + player.weaponId + " img").remove();
-        player.weapon = gridContent[nextRow][nextCol];
-        $(`#grid-cell-${nextRow}-${nextCol}`).empty()
-        $("#" + player.weaponId).append(player.weapon.img);
-        return console.log('Weapon');
-    }
-}
-
 ////////////////////////////// MOVES //////////////////////////////
 // Directions //
 const directions = {
@@ -167,13 +155,28 @@ function move (nextRow, nextCol, player, playerPosition){
     $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
     playerPosition[0] = nextRow;
     playerPosition[1] = nextCol;
-    return console.log(playerPosition);   
+    return console.log(playerPosition);
+}
+
+// What to do when player click on a weapon //
+function weaponClicked (nextRow, nextCol, player){
+        previousWeapon.push(player.weapon);
+        $("#" + player.weaponId + " img").remove();
+        player.weapon = gridContent[nextRow][nextCol];
+        $(`#grid-cell-${nextRow}-${nextCol}`).empty()
+        $("#" + player.weaponId).append(player.weapon.img);
+        return console.log('Weapon');
 }
 
 // Move Management //
-firstMove (player1Position, player1);
 
-function firstMove (playerPosition, player) {
+let counter = 0
+const moveNumber = 3
+
+movement(player1Position, player1);
+
+
+function movement(playerPosition, player) {
     Object.values(directions).forEach(function(directionsArrays) {
         const nextRow = directionsArrays[0] + playerPosition[0]
         const nextCol = directionsArrays[1] + playerPosition[1]
@@ -182,69 +185,28 @@ function firstMove (playerPosition, player) {
         } 
         if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
             $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
-            secondMoveMove (nextRow, nextCol, player, playerPosition);
-            //checkFight
-        }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
-            return console.log('Fight')
-        }
+            $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
+                if (gridContent[nextRow][nextCol] instanceof Weapon){
+                    weaponClicked (nextRow, nextCol, player);
+                } 
+                move (nextRow, nextCol, player, playerPosition);
+
+                $(".grid-cell").off();
+
+                checkFight();
+                const willFight = checkFight()
+                if (willFight){
+                    return console.log('Fight fonction')
+                }
+                
+                counter += 1;
+                if (counter < moveNumber) {
+                    movement(playerPosition, player);   
+                }
+            })
+        } 
     });
 }
-function secondMoveMove (nextRow, nextCol, player, playerPosition) {
-    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
-        weaponClicked (nextRow, nextCol, player)
-        move (nextRow, nextCol, player, playerPosition)
-        Object.values(directions).forEach(function(directionsArrays) {
-            const nextRow = directionsArrays[0] + playerPosition[0]
-            const nextCol = directionsArrays[1] + playerPosition[1]
-            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
-                return;
-            } 
-            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
-                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
-                thirdMove (nextRow, nextCol, player, playerPosition);
-                //checkFight
-            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
-                return console.log('Fight')
-            }
-        })
-    }) 
-}
-function thirdMove (nextRow, nextCol, player, playerPosition) {
-    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
-        weaponClicked (nextRow, nextCol, player)
-        move (nextRow, nextCol, player, playerPosition)
-        Object.values(directions).forEach(function(directionsArrays) {
-            const nextRow = directionsArrays[0] + playerPosition[0]
-            const nextCol = directionsArrays[1] + playerPosition[1]
-            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
-                return;
-            } 
-            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
-                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
-                $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
-                    weaponClicked (nextRow, nextCol, player)
-                    move (nextRow, nextCol, player, playerPosition)
-                    //checkFight
-                    return;
-                })  
-            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
-                return console.log('Fight')
-            }
-        })
-    })
-}
-
-// Change player after moves 
-function changePlayer(player){
-    if (player.name === 'Player1') {
-        return firstMove (player2Position, player2)
-    } else if (player.name === 'Player2') {
-        return firstMove (player1Position, player1)
-    }
-}
-
-// faire un check autour après clique pour voir s'il y a un fight / player  
-// Remettre le  check autour a player et non obstacle car spawn a coté de lautre player possible
 
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 $(".turn").text("-");
@@ -256,6 +218,63 @@ $("#" + player2.weaponId).append(dagger.img);
 function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
+
+function checkFight () {
+    let rowDif = Math.abs(player1Position[0] - player2Position[0]);
+    let colDif = Math.abs(player1Position[1] - player2Position[1]);
+    if (rowDif + colDif === 1) {
+        return true;
+    } return false;
+}
+
+/*
+function secondMoveMove (nextRow, nextCol, player, playerPosition) {
+    $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
+        weaponClicked (nextRow, nextCol, player)
+        move (nextRow, nextCol, player, playerPosition)
+        Object.values(directions).forEach(function(directionsArrays) {
+            const nextRow = directionsArrays[0] + playerPosition[0]
+            const nextCol = directionsArrays[1] + playerPosition[1]
+            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+                return;
+            } 
+            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+                thirdMove (nextRow, nextCol, player, playerPosition);
+            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+                return console.log('Fight')
+            }
+        })
+    }) 
+}
+function thirdMove (nextRow, nextCol, player, playerPosition) {
+    $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
+        weaponClicked (nextRow, nextCol, player)
+        move (nextRow, nextCol, player, playerPosition)
+        Object.values(directions).forEach(function(directionsArrays) {
+            const nextRow = directionsArrays[0] + playerPosition[0]
+            const nextCol = directionsArrays[1] + playerPosition[1]
+            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+                return;
+            } 
+            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+                $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
+                    weaponClicked (nextRow, nextCol, player)
+                    move (nextRow, nextCol, player, playerPosition)
+                    return;
+                })  
+            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+                return console.log('Fight')
+            }
+        })
+    })
+}
+*/
+
+// faire un check autour après clique pour voir s'il y a un fight / player  
+// Remettre le  check autour a player et non obstacle car spawn a coté de lautre player possible
+
 
 /*
 function moves (player, playerArray) {
