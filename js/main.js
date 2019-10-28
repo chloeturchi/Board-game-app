@@ -17,8 +17,8 @@ const bow = new Weapon("bow", 20, "<img class='weaponImg' id='bowImg' src='asset
 const axe = new Weapon("axe", 30, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
 const sword = new Weapon("sword", 40, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
 
-const player1 = new Player("Combattant 1", 100, dagger, "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>");
-const player2 = new Player("Combattant 2", 100, dagger, "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>");
+const player1 = new Player("Player1", 100, dagger, "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weapon-player1');
+const player2 = new Player("Player2", 100, dagger, "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weapon-player2');
 
 ////////////////////////////// VARIABLES & ARRAYS //////////////////////////////
 // Obstacles
@@ -119,10 +119,10 @@ for(let row = 0; row < gridContent.length; row++) {
             }
         // Display players
         } else if (column[col] instanceof Player) {
-            if (column[col].name =='Combattant 1') { 
+            if (column[col].name =='Player1') { 
                 player1Position.push.apply(player1Position, [[row][0], [col][0]]); // Put player 1 position in an array
                 $(newColDiv).append(player1.img); 
-            } else if (column[col].name =='Combattant 2') { 
+            } else if (column[col].name =='Player2') { 
                 player2Position.push.apply(player2Position, [[row][0], [col][0]]); // Put player 2 position in an array
                 $(newColDiv).append(player2.img); 
             }
@@ -133,11 +133,24 @@ for(let row = 0; row < gridContent.length; row++) {
 
 /************************************* ETAPE 2 *************************************/
 
-////////////////////////////// MOVES //////////////////////////////
-// Player previous weapon
+////////////////////////////// WEAPONS//////////////////////////////
+// Player previous weapon // 
 let previousWeapon = [];
 
-// Directions
+// What to do when player click on a weapon //
+function weaponClicked (nextRow, nextCol, player){
+    if (gridContent[nextRow][nextCol] instanceof Weapon){
+        previousWeapon.push(player.weapon);
+        $("#" + player.weaponId + " img").remove();
+        player.weapon = gridContent[nextRow][nextCol];
+        $(`#grid-cell-${nextRow}-${nextCol}`).empty()
+        $("#" + player.weaponId).append(player.weapon.img);
+        return console.log('Weapon');
+    }
+}
+
+////////////////////////////// MOVES //////////////////////////////
+// Directions //
 const directions = {
     right: [0, 1],
     down: [1, 0],
@@ -145,80 +158,104 @@ const directions = {
     up: [-1, 0]
 };
 
-// Set first player turn
-moveManagement (player1Position, player1);
+// What to do when click on a case //
+function move (nextRow, nextCol, player, playerPosition){
+    $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
+    $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
+    gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
+    gridContent[nextRow][nextCol] = player
+    $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
+    playerPosition[0] = nextRow;
+    playerPosition[1] = nextCol;
+    return console.log(playerPosition);   
+}
 
-function moveManagement (playerPosition, player) {
+// Move Management //
+firstMove (player1Position, player1);
+
+function firstMove (playerPosition, player) {
     Object.values(directions).forEach(function(directionsArrays) {
-        const newRow = directionsArrays[0] + playerPosition[0]
-        const newCol = directionsArrays[1] + playerPosition[1]
-        caseManagement(newRow, newCol, playerPosition, player);
+        const nextRow = directionsArrays[0] + playerPosition[0]
+        const nextCol = directionsArrays[1] + playerPosition[1]
+        if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+            return;
+        } 
+        if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+            $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+            secondMoveMove (nextRow, nextCol, player, playerPosition);
+            //checkFight
+        }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+            return console.log('Fight')
+        }
     });
 }
-
-function caseManagement (nextRow, nextCol, playerPosition, player) {
-    if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
-        return;
-    } 
-    if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
-        $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
-        onCLick (nextRow, nextCol, player, playerPosition); 
-        
-    }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
-        console.log('Fight')
-    }
-}
-
-function onCLick (nextRow, nextCol, player, playerPosition) {
+function secondMoveMove (nextRow, nextCol, player, playerPosition) {
     $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
-        clicked (nextRow, nextCol, player)
-            $(`#grid-cell-${nextRow}-${nextCol}`).empty() // remove img if there's weapon img in nextDiv
-            $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
-            $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
-
-            gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
-            gridContent[nextRow][nextCol] = player
-
-            $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
-            return;
+        weaponClicked (nextRow, nextCol, player)
+        move (nextRow, nextCol, player, playerPosition)
+        Object.values(directions).forEach(function(directionsArrays) {
+            const nextRow = directionsArrays[0] + playerPosition[0]
+            const nextCol = directionsArrays[1] + playerPosition[1]
+            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+                return;
+            } 
+            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+                thirdMove (nextRow, nextCol, player, playerPosition);
+                //checkFight
+            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+                return console.log('Fight')
+            }
+        })
     }) 
 }
+function thirdMove (nextRow, nextCol, player, playerPosition) {
+    $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
+        weaponClicked (nextRow, nextCol, player)
+        move (nextRow, nextCol, player, playerPosition)
+        Object.values(directions).forEach(function(directionsArrays) {
+            const nextRow = directionsArrays[0] + playerPosition[0]
+            const nextCol = directionsArrays[1] + playerPosition[1]
+            if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
+                return;
+            } 
+            if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+                $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+                $(`#grid-cell-${nextRow}-${nextCol}`).click(function(){
+                    weaponClicked (nextRow, nextCol, player)
+                    move (nextRow, nextCol, player, playerPosition)
+                    //checkFight
+                    return;
+                })  
+            }  else if (gridContent[nextRow][nextCol] instanceof Player ) {
+                return console.log('Fight')
+            }
+        })
+    })
+}
 
-function clicked (nextRow, nextCol, player){
-    if (gridContent[nextRow][nextCol] instanceof Weapon){
-        previousWeapon.push(player.weapon);
-        player.weapon = gridContent[nextRow][nextCol];
+// Change player after moves 
+function changePlayer(player){
+    if (player.name === 'Player1') {
+        return firstMove (player2Position, player2)
+    } else if (player.name === 'Player2') {
+        return firstMove (player1Position, player1)
     }
 }
 
- // faire un check autour après clique pour voir s'il y a un fight / player
-
+// faire un check autour après clique pour voir s'il y a un fight / player  
 // Remettre le  check autour a player et non obstacle car spawn a coté de lautre player possible
 
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 $(".turn").text("-");
-$("#weapon-player1").append(dagger.img);
-$("#weapon-player2").append(dagger.img);
+$("#" + player1.weaponId).append(dagger.img);
+$("#" + player2.weaponId).append(dagger.img);
 
 ////////////////////////////// FUNCTIONS & LOGS //////////////////////////////
 // Create random Number
 function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
-
-    /* if (gridContent[nextRow][nextCol] instanceof Weapon) {
-        previousWeapon.push(player.weapon);
-        player.weapon = gridContent[nextRow][nextCol]
-        console.log(player.weapon);
-        onCLick (nextRow, nextCol, player, playerPosition)
-    } else if (gridContent[nextRow][nextCol] instanceof Player) {
-        console.log('fight');
-        $("div").removeClass("highlight")
-    } else {
-
-    }*/
-
-
 
 /*
 function moves (player, playerArray) {
