@@ -9,50 +9,79 @@
     </head>
 
     <body>
-        <div id="wrapper"></div>
+        <h1 id="mainTitle">Jeu de plateau</h1>
         
-        <div class="container">
-            <div class="description">
-                <h3>Player 1</h3>
+        <div class="mainBlock">
+            
+            <div id="wrapper">
             </div>
-            <div class="description">
-                <p class="turn" id="turn-player1"></p>
-                <p class= "actual-weapon" id="weapon-player1">actual weapon :  <br></p>
+
+            <div id="weaponsContainer">
+                <div class="block">
+                    <h3>Players</h3>
+                    <div class="weaponBlock" id="weaponPlayer1">
+                        <h4>Player 1</h4>
+                        <p class="actualWeapon" id="weaponPlayer1">actual weapon :  <br></p>
+                    </div>
+                    <div class="weaponBlock" id="weaponPlayer2">
+                        <h4>Player 2</h4>
+                        <p class="actualWeapon" id="weaponPlayer2">actual weapon : <br></p>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h3>Weapons</h3>
+                    <div class="weaponBlock" id="weaponDagger">
+                        <h4>Dagger</h4>
+                        <p id="infoDagger">10 point</p>
+                        <img src='assets/img/dagger.svg'/>
+                    </div>
+                    <div class="weaponBlock" id="weaponBow">
+                        <h4>Bow</h4>
+                        <p id="infoBow">15 point</p>
+                        <img src='assets/img/bow.svg'/>
+                    </div>
+                    <div class="weaponBlock" id="weaponAxe">
+                        <h4>Axe</h4>
+                        <p id="infoAxe">20 point</p>
+                        <img src='assets/img/axe.svg'/>
+                    </div>
+                    <div class="weaponBlock" id="weaponSword">
+                        <h4>Sword</h4>
+                        <p id="infoDagger">25 point </p>
+                        <img src='assets/img/sword.svg'/>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="description">
-                    <h3>Player 2</h3>
-            </div>
-            <div class="description">
-                <p class="turn" id="turn-player2"></p>
-                <p class="actual-weapon" id="weapon-player2">actual weapon : <br></p>
+
+            <div id="fightContainer">
+            <!--
+                <div class="block">
+                    <h3>Let's Fight</h3>
+                    <div class="fightBlock">
+                        <p class="playerTurn">Player 1 turn :</p>
+                    </div>
+                    <div class="fightBlock">
+                        <button class="attack fightBtn" type="button">Attack</button>
+                        <button class="defend fightBtn" type="button">Defend</button>
+                    </div>
+
+                    <div class="fightDescription" id="comments">
+                            <p class="playerLife" id="player1Life">Player 1 : 100 life points</p>
+                            <p class="playerLife" id="player2Life">Player 2 : 100 life points</p>
+                            <p>Player 1 choose to attack Player 2</p>
+                            <p>Player 2 has lost 10 points</p>
+                            <p>It's player 2 turn !</p>
+
+                            <p>Player 1 choose to defend</p>
+                            <p>It's player 2 turn !</p>
+
+                    </div>
+                </div> 
+            -->
             </div>
         </div>
 
-        <div class="container" id="weapon-container">
-            <h3>Type of weapons</h3>
-            <div class="weapon_type">
-                <img src='assets/img/dagger.svg'/>
-                <p>Dagger :  <br>
-                    10 point</p>
-            </div>
-            <div class="weapon_type">
-                <img src='assets/img/bow.svg'/>
-                <p>Bow :  <br>
-                    15 point</p>
-            </div>
-            <div class="weapon_type"> 
-                <img src='assets/img/axe.svg'/>
-                <p>Axe :  <br>
-                    20 point</p>
-            </div>
-            <div class="weapon_type">
-                <img src='assets/img/sword.svg'/>
-                <p>Sword :  <br>
-                    25 point </p>
-            </div>
-        </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script type="module" src="js/main.js"></script>

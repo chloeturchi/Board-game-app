@@ -4,54 +4,6 @@ body, html {
     height: 100%;
     font-family: 'Turret Road', cursive;
     background-color: #CCD4E5;
-    text-align: center;
-}
-
-#wrapper {
-    text-align:center;
-    width: auto;
-    height: auto;
-    margin-left: 50px;;
-    margin-right: 10px;
-}
-
-.container {
-    display: inline-block;
-    background-color: white;
-    outline: 1px solid #474954;
-    text-align: center;
-    padding: 10px;
-    margin: 20px 10px;
-}
-
-.container img {
-    width: 40px;
-}
-
-.description {
-    width: auto;
-    height: auto;
-    text-align: center;
-}
-
-.weapon_type {
-    width: auto;
-    height: auto;
-    padding: 2px 30px 2px 20px;
-    display: inline-block;
-}
-
-.actual-weapon {
-    margin: 0px; 
- }
-
-.actual-weapon img {
-   padding-top: 4px; 
-}
-
-#weapon-container {
-    width: auto;
-    height: auto;
 }
 
 .grid-cell {
@@ -63,11 +15,102 @@ body, html {
     background: #FBFBFB;
 }
 
-#title {
+#mainTitle {
     text-align: center;
     color: #474954;
 }
 
 .highlight {
     background : rgb(255, 244, 198);
+}
+
+/* containers */
+
+.mainBlock{
+    text-align: center;
+}
+
+#wrapper {
+    float: left;
+    width: auto;
+    height: auto;
+    margin-left: 10px;;
+    margin-right: 10px;
+    display: block;
+    white-space: nowrap;
+}
+
+#weaponsContainer {
+    width: auto;
+}
+
+#weaponsContainer img {
+    width: 40px;
+}
+
+.weaponBlock {
+    display: inline-block;
+    margin: 0px 15px;
+}
+
+.block {
+    display: inline-block;
+    outline: 1px solid #474954;
+    background-color: white;
+    padding: 10px;
+    margin: 0px 5px 10px 5px;
+}
+
+.fightBlock {
+    display: inline-block;
+    margin: 0px 10px 20px 10px
+}
+
+#comments {
+    width: 600px;
+    background-color: rgb(243, 243, 243);
+    padding: 2px;
+    height: auto;
+}
+
+.playerLife{
+    display: inline-block;
+    margin: 20px 30px;
+}
+
+.fightBtn {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.attack:hover {
+    background-color: rgb(236, 92, 92);
+}
+.attack:active {
+    background-color: rgb(233, 64, 64);
+    padding: 13px 30px;
+}
+
+.attack {
+    background-color: rgb(240, 109, 109);
+}
+
+.defend {
+    background-color: rgb(160, 160, 255);
+}
+
+.defend:hover {
+    background-color: rgb(139, 139, 250);
+}
+
+.defend:active {
+    background-color: rgb(102, 102, 243);
+    padding: 13px 30px;
 }
