@@ -168,12 +168,15 @@ function movement(playerPosition, player) {
             return;
         } 
         if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
+
             $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
             $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
                 if (gridContent[nextRow][nextCol] instanceof Weapon){
                     weaponClicked (nextRow, nextCol, player);
                 } 
                 move (nextRow, nextCol, player, playerPosition);
+                numberOfMove();
+
                 $(".grid-cell").off();
                 checkFight();
                 const willFight = checkFight()
@@ -181,10 +184,11 @@ function movement(playerPosition, player) {
                     return fight(player);
                 }
                 counter += 1;
-                if (counter < moveNumber) {
+                if (counter < moveNumber ) {
                     movement(playerPosition, player);   
                 } else {
                     counter = 0;
+                    $(".stopTurnContainer").empty();
                     return changeTurn(player);
                 }
             })
@@ -192,7 +196,19 @@ function movement(playerPosition, player) {
     });
 }
 
+
+
 ////////////////////////////// FUNCTIONS //////////////////////////////
+
+// Choose number of move
+function numberOfMove (){
+    $(".stopTurnContainer").empty();
+    $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
+    $(".stopTurnBtn").click(function(){
+       alert("BBBBB");
+       $(".stopTurnContainer").empty();
+    });
+}
 
 // What to do when click on a case //
 function move (nextRow, nextCol, player, playerPosition){
@@ -245,49 +261,105 @@ function checkFight () {
 /************************************* ETAPE 3 *************************************/
 
 ////////////////////////////// FIGHT //////////////////////////////
+let player1Defense = 0;
+let player2Defense = 0;
+
 
 // General fight function //
 function fight(player){
-    $("#fightContainer").append("<div class='block'> <h3>Let's Fight</h3> <div class='fightBlock'> <p class='playerTurn'></p> </div> <div class='fightBlock'> <button class='attack fightBtn' type='button'>Attack</button> <button class='defend fightBtn' type='button'>Defend</button> </div> <div class='fightDescription' id='comments'> <p class='playerLife' id='player1Life'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='player2Life'>" + player2.name + " : " + player2.life + " life points</p></div> </div>");
+    $(".stopTurnContainer").empty();
+    $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='Player1Life'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='Player2Life'>" + player2.name + " : " + player2.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
+    fightChoice(player)
+}
+
+function fightChoice(player) {
     if (player === player1) {
+        $(".playerTurn").empty()
         $(".playerTurn").append(player.name + " turn : ");
         $(".attack").click(function(){
             attack(player, player2)
         });
         $(".defend").click(function(){
             defend(player);
-        });
+        }); 
     } else if (player === player2) {
+        $(".playerTurn").empty()
         $(".playerTurn").append(player.name + " turn : ");
         $(".attack").click(function(){
             attack(player, player1)
         });
         $(".defend").click(function(){
             defend(player);
-        });    
+        }); 
     }
 }
 
 // Attack function //
 function attack(mainPlayer, otherPlayer){
+    $(".fightDescription").empty();
     $(".fightDescription").append("<p>" + mainPlayer.name + " choose to attack " + otherPlayer.name + "</p>");
-    console.log(otherPlayer.life - mainPlayer.weapon.damage)
-    $(".fightDescription").append("<p> " + mainPlayer.name + " do " + (mainPlayer.weapon.damage) + " damages to Player2</p>");
-    $(".fightDescription").append("<p> Player2 has now " + (otherPlayer.life - mainPlayer.weapon.damage) + " life points</p>");
-    otherPlayer.life = otherPlayer.life - mainPlayer.weapon.damage
-    $("#player2Life").empty();
-    $("#player2Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
+/*
+    if (player1Defense == 1 || player2Defense == 1) {
+        $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage/2) + " damages to "+ otherPlayer.name +"</p>");
+        $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + (otherPlayer.life - (mainPlayer.weapon.damage/2)) + " life points</p>");
+        otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage / 2)
+        player1Defense = 0
+        player2Defense = 0 
+    } else {} */
+        $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage) + " damages to "+ otherPlayer.name +"</p>");
+        $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + (otherPlayer.life - mainPlayer.weapon.damage) + " life points</p>");
+        otherPlayer.life = otherPlayer.life - mainPlayer.weapon.damage 
+    
+
+    $("#"+otherPlayer.name+"Life").empty();
+    if (otherPlayer.life > 0){
+        $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
+    } else if (otherPlayer.life <= 0){
+        $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
+    }
+    $(".attack").off();
+    if (mainPlayer.life <= 0) {
+        $(".fightDescription").empty();
+        $(".fightDescription").append("<p>" + otherPlayer.name + " WIN !</p>")
+        $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
+        $(".retryBtn").click(function(){
+            window.location.reload();
+        }); 
+    } else if (otherPlayer.life <= 0){
+        $(".fightDescription").empty();
+        $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
+        $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
+        $(".retryBtn").click(function(){
+            window.location.reload();
+        }); 
+    } else if (mainPlayer === player1){
+        return fightChoice(player2)
+    } else if (mainPlayer === player2){
+        return fightChoice(player1)
+    }
 }
 
 // Defend function //
 function defend(mainPlayer){
+    $(".fightDescription").empty();
     $(".fightDescription").append("<p>" + mainPlayer.name + " choose to defend himself for next round</p>");
-
+    /*
+    if (mainPlayer == player1){
+        player1Defense = 1
+    } else if (mainPlayer == player2) {
+        player2Defense = 1
+    }
+    if (mainPlayer === player1){
+        return fightChoice(player2)
+    } else if (mainPlayer === player2){
+        return fightChoice(player1)
+    }*/
 }
 
 // REGLER LE BUG DU J1 DERNIER CLIQUE POUR FIGHT FAIT BOUGER J2
 // REGLER LE PB DE GRILLE DESTRUCTUREE LORSQU'ON REDUIT LA PAGE
 // FAIRE QUE LES OBSTACLES NE PEUVENT PAS SPAWNER EN DIAGONALE !!!
+                                                 
 // AJOUTER DIV AVEC JS PLUTOT QUE CREER HTML DIRECT ARMES - IDEM POINTS
 // AJOUTER BOUTON POUR DIRE STOP JE NE FAIS QUE UN, OU DEUX PAS OU TROIS
 // REGLER PB DARME, ELLE DOIT TOMBER SUR LA CASE RECUEILLI
