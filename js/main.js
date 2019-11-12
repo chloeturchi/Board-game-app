@@ -15,9 +15,9 @@ const gridContent = gameMap.createArray(10,10);
 const obstacle = new Obstacle("<img class='obstacleImg' src='assets/img/obstacle.svg'/>");
 
 const dagger = new Weapon("dagger", 10, "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
-const bow = new Weapon("bow", 20, "<img class='weaponImg' id='bowImg' src='assets/img/bow.svg'/>");
-const axe = new Weapon("axe", 30, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
-const sword = new Weapon("sword", 40, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
+const bow = new Weapon("bow", 14, "<img class='weaponImg' id='bowImg' src='assets/img/bow.svg'/>");
+const axe = new Weapon("axe", 20, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
+const sword = new Weapon("sword", 24, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
 
 const player1 = new Player("Player1", 100, dagger, "nothing", "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weaponPlayer1');
 const player2 = new Player("Player2", 100, dagger, "nothing", "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weaponPlayer2');
@@ -154,13 +154,29 @@ const directions = {
 };
 
 // Init counter //
-let counter = 0
+let counter = 0 
 
-// Init first player movement //
-movement(player1Position, player1);
+// New weapon //
+let player1Counter = 0
+let player1PreviousWeapon = [];
+let player2Counter = 0
+let player2PreviousWeapon = [];
 
-// Global function for player movements //
-function movement(playerPosition, player) {
+
+// Init first player playerTurn //
+playerTurn(player1Position, player1, player2);
+
+// Global function for player playerTurns //
+function playerTurn(playerPosition, mainPlayer, otherPlayer) {
+    $(".stopTurnContainer").empty();
+    $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
+    $(".stopTurnBtn").click(function(){
+    $(".stopTurnContainer").empty();
+    $(".grid-cell").off();
+    $(".grid-cell").removeClass("highlight");
+    counter = 0;
+    changeTurn(mainPlayer, otherPlayer);
+    });
     Object.values(directions).forEach(function(directionsArrays) {
         const nextRow = directionsArrays[0] + playerPosition[0]
         const nextCol = directionsArrays[1] + playerPosition[1]
@@ -168,84 +184,91 @@ function movement(playerPosition, player) {
             return;
         } 
         if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
-
             $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
             $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
-                if (gridContent[nextRow][nextCol] instanceof Weapon){
-                    weaponClicked (nextRow, nextCol, player);
-                } 
-                move (nextRow, nextCol, player, playerPosition);
-                numberOfMove();
 
+                if (gridContent[nextRow][nextCol] instanceof Weapon){
+                    weaponClicked (nextRow, nextCol, mainPlayer, playerPosition);
+                }
+                move (nextRow, nextCol, mainPlayer, playerPosition);
                 $(".grid-cell").off();
                 checkFight();
                 const willFight = checkFight()
                 if (willFight){
-                    return fight(player);
+                    $(".stopTurnContainer").empty();
+                    return fight(mainPlayer, otherPlayer);
                 }
-                counter += 1;
+                counter++;
                 if (counter < moveNumber ) {
-                    movement(playerPosition, player);   
+                    playerTurn(playerPosition, mainPlayer, otherPlayer);   
                 } else {
                     counter = 0;
-                    $(".stopTurnContainer").empty();
-                    return changeTurn(player);
+                    return changeTurn(mainPlayer, otherPlayer);
                 }
             })
         } 
     });
 }
 
-
-
 ////////////////////////////// FUNCTIONS //////////////////////////////
 
-// Choose number of move
-function numberOfMove (){
-    $(".stopTurnContainer").empty();
-    $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
-    $(".stopTurnBtn").click(function(){
-       alert("BBBBB");
-       $(".stopTurnContainer").empty();
-    });
-}
-
 // What to do when click on a case //
-function move (nextRow, nextCol, player, playerPosition){
+function move (nextRow, nextCol, mainPlayer, playerPosition){
     $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
-    $(`#grid-cell-${nextRow}-${nextCol}`).append(player.img); // Ajouter L'image du player sur la case cliquée
+    $(`#grid-cell-${nextRow}-${nextCol}`).append(mainPlayer.img); // Ajouter L'image du player sur la case cliquée
     gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
-    gridContent[nextRow][nextCol] = player
+    gridContent[nextRow][nextCol] = mainPlayer
     $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
-    leavePreviousWeapon(player, playerPosition);
+    leavePreviousWeapon(mainPlayer);
     playerPosition[0] = nextRow;
     playerPosition[1] = nextCol;
 }
 
 // What to do when player click on a weapon //
-function weaponClicked (nextRow, nextCol, player){
-        player.previousWeapon = player.weapon
-        $("#" + player.weaponId + " img").remove();
-        player.weapon = gridContent[nextRow][nextCol];
+function weaponClicked (nextRow, nextCol, mainPlayer){
+        mainPlayer.previousWeapon = mainPlayer.weapon
+        $("#" + mainPlayer.weaponId + " img").remove();
+        mainPlayer.weapon = gridContent[nextRow][nextCol];
         $(`#grid-cell-${nextRow}-${nextCol}`).empty()
-        $("#" + player.weaponId).append(player.weapon.img);
+        $("#" + mainPlayer.weaponId).append(mainPlayer.weapon.img);
+
+        if (mainPlayer === player1){
+            player1Counter = 1
+            player1PreviousWeapon[0] = nextRow
+            player1PreviousWeapon[1] = nextCol
+        } else if (mainPlayer === player2){
+            player2Counter = 1
+            player2PreviousWeapon[0] = nextRow
+            player2PreviousWeapon[1] = nextCol
+        }
+
 }
 
 // Put previousweapon in previous case //
-function leavePreviousWeapon(player, playerPosition){
-    if (player.previousWeapon instanceof Weapon) {
-        $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).append(player.previousWeapon.img)
-        gridContent[playerPosition[0]][playerPosition[1]] = player.previousWeapon
-        player.previousWeapon = '';
-    }
+function leavePreviousWeapon(mainPlayer){
+    if (mainPlayer == player1 && player1Counter === 1){
+        player1Counter = player1Counter + 1
+    } else if (mainPlayer == player1 && player1Counter === 2){
+        gridContent[player1PreviousWeapon[0]][player1PreviousWeapon[1]] = mainPlayer.previousWeapon;
+        $(`#grid-cell-${player1PreviousWeapon[0]}-${player1PreviousWeapon[1]}`).append(mainPlayer.previousWeapon.img);
+        player1Counter = 0;
+    } 
+    if (mainPlayer == player2 && player2Counter === 1){
+        player2Counter = player2Counter + 1
+    } else if (mainPlayer == player2 && player2Counter === 2){
+        gridContent[player2PreviousWeapon[0]][player2PreviousWeapon[1]] = mainPlayer.previousWeapon;
+        $(`#grid-cell-${player2PreviousWeapon[0]}-${player2PreviousWeapon[1]}`).append(mainPlayer.previousWeapon.img);
+        player2Counter = 0;
+}
 }
 
+
 // Change player turn//
-function changeTurn(player) {
-    if (player === player1){
-        movement(player2Position, player2);
-    } else if (player === player2) {
-        movement(player1Position, player1);
+function changeTurn(mainPlayer, otherPlayer) {
+    if (mainPlayer == player1){
+        playerTurn(player2Position, otherPlayer, mainPlayer);
+    } else if (mainPlayer == player2) {
+        playerTurn(player1Position, otherPlayer, mainPlayer);
     }
 }
 
@@ -261,106 +284,87 @@ function checkFight () {
 /************************************* ETAPE 3 *************************************/
 
 ////////////////////////////// FIGHT //////////////////////////////
-let player1Defense = 0;
-let player2Defense = 0;
-
+// General fight function //
+let defense = false;
 
 // General fight function //
-function fight(player){
+function fight(mainPlayer, otherPlayer){
     $(".stopTurnContainer").empty();
     $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='Player1Life'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='Player2Life'>" + player2.name + " : " + player2.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
-    fightChoice(player)
+    fight2(mainPlayer, otherPlayer)
 }
 
-function fightChoice(player) {
-    if (player === player1) {
+// General fight function //
+function fight2(mainPlayer, otherPlayer){
         $(".playerTurn").empty()
-        $(".playerTurn").append(player.name + " turn : ");
+        $(".playerTurn").append(mainPlayer.name + " turn : ");
         $(".attack").click(function(){
-            attack(player, player2)
+            $(".fightDescription").empty();
+            if (defense == true){
+                otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage/2)
+                $("#"+otherPlayer.name+"Life").empty();
+                $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
+                $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage / 2) + " damages to "+ otherPlayer.name +"</p>");
+                $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
+                if (otherPlayer.life <= 0 || mainPlayer.life <= 0){
+                    $(".attack").off();
+                    $(".defend").off();
+                    $(".fightDescription").empty();
+                    $("#"+otherPlayer.name+"Life").empty();
+                    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
+                    $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
+                    $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
+                    return $(".retryBtn").click(function(){
+                        window.location.reload();
+                    }); 
+                } else if (otherPlayer.life > 0){
+                    defense = false
+                }
+            } else if (defense == false){
+                otherPlayer.life = otherPlayer.life - mainPlayer.weapon.damage
+                $("#"+otherPlayer.name+"Life").empty();
+                $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
+                $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage) + " damages to "+ otherPlayer.name +"</p>");
+                $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
+                if (otherPlayer.life <= 0 || mainPlayer.life <= 0){
+                    $(".attack").off();
+                    $(".defend").off();
+                    $(".fightDescription").empty();
+                    $("#"+otherPlayer.name+"Life").empty();
+                    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
+                    $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
+                    $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
+                    return $(".retryBtn").click(function(){
+                        window.location.reload();
+                    }); 
+                }
+            }
+            $(".attack").off();
+            $(".defend").off();
+            if (otherPlayer.life > 0 || mainPlayer.life > 0){
+                return changeTurnFight(mainPlayer, otherPlayer);
+            }
         });
         $(".defend").click(function(){
-            defend(player);
-        }); 
-    } else if (player === player2) {
-        $(".playerTurn").empty()
-        $(".playerTurn").append(player.name + " turn : ");
-        $(".attack").click(function(){
-            attack(player, player1)
+            $(".fightDescription").empty();
+            $(".fightDescription").append("<p>" + mainPlayer.name + " choose to defend himself for next round</p>");
+            defense = true
+            $(".attack").off();
+            $(".defend").off();
+            return changeTurnFight(mainPlayer, otherPlayer);
         });
-        $(".defend").click(function(){
-            defend(player);
-        }); 
-    }
 }
 
-// Attack function //
-function attack(mainPlayer, otherPlayer){
-    $(".fightDescription").empty();
-    $(".fightDescription").append("<p>" + mainPlayer.name + " choose to attack " + otherPlayer.name + "</p>");
-/*
-    if (player1Defense == 1 || player2Defense == 1) {
-        $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage/2) + " damages to "+ otherPlayer.name +"</p>");
-        $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + (otherPlayer.life - (mainPlayer.weapon.damage/2)) + " life points</p>");
-        otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage / 2)
-        player1Defense = 0
-        player2Defense = 0 
-    } else {} */
-        $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage) + " damages to "+ otherPlayer.name +"</p>");
-        $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + (otherPlayer.life - mainPlayer.weapon.damage) + " life points</p>");
-        otherPlayer.life = otherPlayer.life - mainPlayer.weapon.damage 
-    
-
-    $("#"+otherPlayer.name+"Life").empty();
-    if (otherPlayer.life > 0){
-        $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
-    } else if (otherPlayer.life <= 0){
-        $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
-    }
-    $(".attack").off();
-    if (mainPlayer.life <= 0) {
-        $(".fightDescription").empty();
-        $(".fightDescription").append("<p>" + otherPlayer.name + " WIN !</p>")
-        $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
-        $(".retryBtn").click(function(){
-            window.location.reload();
-        }); 
-    } else if (otherPlayer.life <= 0){
-        $(".fightDescription").empty();
-        $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
-        $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
-        $(".retryBtn").click(function(){
-            window.location.reload();
-        }); 
-    } else if (mainPlayer === player1){
-        return fightChoice(player2)
-    } else if (mainPlayer === player2){
-        return fightChoice(player1)
-    }
-}
-
-// Defend function //
-function defend(mainPlayer){
-    $(".fightDescription").empty();
-    $(".fightDescription").append("<p>" + mainPlayer.name + " choose to defend himself for next round</p>");
-    /*
+function changeTurnFight(mainPlayer, otherPlayer) {
     if (mainPlayer == player1){
-        player1Defense = 1
-    } else if (mainPlayer == player2) {
-        player2Defense = 1
+        fight2(player2, player1);
+    } else if (otherPlayer == player1) {
+        fight2(player1, player2);
     }
-    if (mainPlayer === player1){
-        return fightChoice(player2)
-    } else if (mainPlayer === player2){
-        return fightChoice(player1)
-    }*/
 }
 
 // REGLER LE BUG DU J1 DERNIER CLIQUE POUR FIGHT FAIT BOUGER J2
-// REGLER LE PB DE GRILLE DESTRUCTUREE LORSQU'ON REDUIT LA PAGE
 // FAIRE QUE LES OBSTACLES NE PEUVENT PAS SPAWNER EN DIAGONALE !!!
-                                                 
 // AJOUTER DIV AVEC JS PLUTOT QUE CREER HTML DIRECT ARMES - IDEM POINTS
-// AJOUTER BOUTON POUR DIRE STOP JE NE FAIS QUE UN, OU DEUX PAS OU TROIS
 // REGLER PB DARME, ELLE DOIT TOMBER SUR LA CASE RECUEILLI
 // LE RESPONSIVE
