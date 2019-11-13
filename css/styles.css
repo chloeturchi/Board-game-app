@@ -1,0 +1,179 @@
+@import url("https://fonts.googleapis.com/css?family=Turret+Road&display=swap");
+body, html {
+  height: 100%;
+  font-family: 'Turret Road', cursive;
+  background-color: #7c858b;
+}
+
+.grid-cell {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0px;
+  outline: 1px solid #474954;
+  display: inline-block;
+  background: #FFF9F7;
+}
+
+#mainTitle {
+  text-align: center;
+  color: #FFF9F7;
+}
+
+.highlight {
+  background: #F2CC8F;
+  cursor: pointer;
+}
+
+.highlight:hover {
+  background-color: #ffdda7;
+}
+
+/* containers */
+.mainBlock {
+  text-align: center;
+}
+
+#wrapper {
+  float: left;
+  width: auto;
+  height: auto;
+  margin-left: 40px;
+  margin-right: 10px;
+  display: block;
+  white-space: nowrap;
+}
+
+/* buttons */
+button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.stopTurnBtn {
+  background-color: #E07A5F;
+}
+
+.stopTurnBtn:hover {
+  background-color: #e48f77;
+}
+
+.stopTurnBtn:active {
+  background-color: #df7153;
+  padding: 13px 30px;
+}
+
+.retryBtn {
+  background-color: #9AC2C9;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.retryBtn:hover {
+  background-color: #a2c7ce;
+}
+
+.retryBtn:active {
+  background-color: #86bcc5;
+  padding: 13px 30px;
+}
+
+.attack {
+  background-color: #f06d6d;
+}
+
+.attack:hover {
+  background-color: #ec5c5c;
+}
+
+.attack:active {
+  background-color: #e94040;
+  padding: 13px 30px;
+}
+
+.defend {
+  background-color: #81B29A;
+}
+
+.defend:hover {
+  background-color: #94b4a5;
+}
+
+.defend:active {
+  background-color: #81B29A;
+  padding: 13px 30px;
+}
+
+/* autre */
+.block {
+  display: inline-block;
+  outline: 1px solid #474954;
+  background-color: #FFF9F7;
+}
+
+.stopTurnContainer .block {
+  padding: 20px 80px 40px 80px;
+}
+
+#weaponsContainer {
+  width: auto;
+}
+
+#weaponsContainer img {
+  width: 40px;
+}
+
+#weaponContainer {
+  padding: 0px 95px 5px 95px;
+}
+
+.weaponBlock {
+  display: inline-block;
+  margin: 0px 20px;
+}
+
+.actualWeapon {
+  margin-bottom: 0px;
+}
+
+.playerContainer {
+  margin: 10px 0px;
+  padding: 0px 140px;
+}
+
+/* fight */
+#fightContainer .block {
+  margin-bottom: 10px;
+}
+
+.fightBlock {
+  display: inline-block;
+  margin: 0px 10px 0px 10px;
+}
+
+.playerLife {
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  background-color: #9AC2C9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.fightBtn {
+  margin: 20px 10px;
+}
+
+#comments {
+  width: 600px;
+  background-color: #e4e9ec;
+  padding: 2px;
+  height: auto;
+}
+/*# sourceMappingURL=styles.css.map */

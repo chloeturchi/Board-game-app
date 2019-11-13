@@ -5,50 +5,51 @@ import Player from './character.js'
 
 /************************************* ETAPE 1 *************************************/
 
-////////////////////////////// GENERATE 2DARRAY //////////////////////////////
-
-const gameMap = new Map ();
-const gridContent = gameMap.createArray(10,10);
-
 ////////////////////////////// INSTANCES //////////////////////////////
+const gameMap = new Map ();
 
 const obstacle = new Obstacle("<img class='obstacleImg' src='assets/img/obstacle.svg'/>");
 
 const dagger = new Weapon("dagger", 10, "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
-const bow = new Weapon("bow", 14, "<img class='weaponImg' id='bowImg' src='assets/img/bow.svg'/>");
+const mace = new Weapon("mace", 14, "<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>");
 const axe = new Weapon("axe", 20, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
 const sword = new Weapon("sword", 24, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
 
 const player1 = new Player("Player1", 100, dagger, "nothing", "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weaponPlayer1');
 const player2 = new Player("Player2", 100, dagger, "nothing", "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weaponPlayer2');
 
+////////////////////////////// CHANGEABLE VALUES //////////////////////////////
+const gridContent = gameMap.createArray(10,10); // Choose the number of cases for your grid 
+const obstacleNumber = 10; // Choose the number of obstacles you want 
+const moveNumber = 3; // Choose the number of moves a player can do
+
 ////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
 
 $("#" + player1.weaponId).append(dagger.img);
-$("#" + player2.weaponId).append(dagger.img);
+$("#player1Title").append(player1.img);
 
-////////////////////////////// CHANGEABLE VALUES //////////////////////////////
-const obstacleNumber = 8; // Choose the number of obstacles you want 
-const moveNumber = 3; // Choose the number of moves a player can do
+$("#" + player2.weaponId).append(dagger.img);
+$("#player2Title").append(player2.img);
+
 
 ////////////////////////////// VARIABLES & ARRAYS //////////////////////////////
 
-// Get players positions on grid //
+// Players positions on grid //
 let player1Position = [];
 let player2Position = [];
 
-const obstacleArr = []; // Obstacles //
+const obstacleArr = []; // Obstacles array//
 for (let i = 0; i < obstacleNumber; i++) {
     obstacleArr.push(obstacle);
 };  
 
-const weaponArr = []; // Weapons //
-weaponArr.push.apply(weaponArr, [bow, axe, sword]);
+const weaponArr = []; // Weapons array//
+weaponArr.push.apply(weaponArr, [mace, axe, sword]);
 
-const playerArr = []; // Players //
+const playerArr = []; // Players array//
 playerArr.push.apply(playerArr, [player1, player2]); 
 
-////////////////////////////// ADD OBSTACLES IN A GLOBAL ARRAY AND DISPLAY //////////////////////////////
+////////////////////////////// ADD OBSTACLES IN OBSTACLE ARRAY AND DISPLAY //////////////////////////////
 
 for (let i = 0; i < obstacleArr.length; i++){
     function displayObstacles(){
@@ -62,7 +63,7 @@ for (let i = 0; i < obstacleArr.length; i++){
     };  displayObstacles()
 };
 
-////////////////////////////// ADD WEAPONS //////////////////////////////
+////////////////////////////// ADD WEAPONS IN WEAPON ARRAY AND DISPLAY //////////////////////////////
 
 for (let i = 0; i < weaponArr.length; i++){
     function displayWeapons(){
@@ -76,7 +77,7 @@ for (let i = 0; i < weaponArr.length; i++){
     };  displayWeapons();
 };
 
-////////////////////////////// ADD PLAYERS //////////////////////////////
+////////////////////////////// ADD PLAYERS IN PLAYER ARRAY AND DISPLAY //////////////////////////////
 
 for (let i = 0; i < playerArr.length; i++){
     function displayplayer(){
@@ -114,8 +115,8 @@ for(let row = 0; row < gridContent.length; row++) {
         if (column[col] instanceof Obstacle) {
             $(newColDiv).append(obstacle.img);
         } else if (column[col] instanceof Weapon) {
-            if (column[col].name == 'bow') {
-                $(newColDiv).append(bow.img);
+            if (column[col].name == 'mace') {
+                $(newColDiv).append(mace.img);
             } else if (column[col].name == 'axe') {
                 $(newColDiv).append(axe.img);
             } else if (column[col].name == 'sword') {
@@ -162,7 +163,6 @@ let player1PreviousWeapon = [];
 let player2Counter = 0
 let player2PreviousWeapon = [];
 
-
 // Init first player playerTurn //
 playerTurn(player1Position, player1, player2);
 
@@ -171,11 +171,11 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
     $(".stopTurnContainer").empty();
     $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
     $(".stopTurnBtn").click(function(){
-    $(".stopTurnContainer").empty();
-    $(".grid-cell").off();
-    $(".grid-cell").removeClass("highlight");
-    counter = 0;
-    changeTurn(mainPlayer, otherPlayer);
+        $(".stopTurnContainer").empty();
+        $(".grid-cell").off();
+        $(".grid-cell").removeClass("highlight");
+        counter = 0;
+        changeTurn(mainPlayer, otherPlayer);
     });
     Object.values(directions).forEach(function(directionsArrays) {
         const nextRow = directionsArrays[0] + playerPosition[0]
