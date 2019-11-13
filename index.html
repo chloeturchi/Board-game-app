@@ -5,39 +5,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Projet 6</title>
-        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/styles.css">
     </head>
 
     <body>
-        <h1 id="mainTitle">Jeu de plateau</h1>
+        <h1 id="mainTitle">FIGHT GAME</h1>
         
         <div class="mainBlock">
             
             <div id="wrapper">
             </div>
 
-            <div id="weaponsContainer">
-                <div class="block">
-                    <div class="weaponBlock" id="weaponPlayer1">
-                        <h4>Player 1</h4>
-                        <p class="actualWeapon" id="weaponPlayer1">actual weapon :  <br></p>
-                    </div>
-                    <div class="weaponBlock" id="weaponPlayer2">
-                        <h4>Player 2</h4>
-                        <p class="actualWeapon" id="weaponPlayer2">actual weapon : <br></p>
-                    </div>
-                </div>
+            <div id="fightContainer">
+            </div>
 
-                <div class="block">
+            <div id="weaponsContainer">
+
+                <div class="block" id="weaponContainer">
                     <div class="weaponBlock" id="weaponDagger">
                         <h4>Dagger</h4>
                         <p id="infoDagger">10 point</p>
                         <img src='assets/img/dagger.svg'/>
                     </div>
                     <div class="weaponBlock" id="weaponBow">
-                        <h4>Bow</h4>
-                        <p id="infoBow">14 point</p>
-                        <img src='assets/img/bow.svg'/>
+                        <h4>Mace</h4>
+                        <p id="infoMace">14 point</p>
+                        <img src='assets/img/mace.svg'/>
                     </div>
                     <div class="weaponBlock" id="weaponAxe">
                         <h4>Axe</h4>
@@ -50,13 +43,23 @@
                         <img src='assets/img/sword.svg'/>
                     </div>
                 </div>
+
+                <div class="playerContainer block">
+                    <div class="weaponBlock" >
+                        <h4 class="playerTitle" id="player1Title">Player 1 <br><br></h4>
+                        <p class="actualWeapon" id="weaponPlayer1">actual weapon :  <br><br></p>
+                    </div>
+                    <div class="weaponBlock">
+                        <h4 class="playerTitle" id="player2Title">Player 2 <br><br></h4>
+                        <p class="actualWeapon" id="weaponPlayer2">actual weapon : <br><br></p>
+                    </div>
+                </div>
+
             </div>
 
             <div class="stopTurnContainer">
             </div>
 
-            <div id="fightContainer">
-            </div>
         </div>
 
 
