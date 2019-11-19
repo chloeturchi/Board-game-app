@@ -3,7 +3,7 @@ import Obstacle from './obstacle.js'
 import Weapon from './weapon.js'
 import Player from './character.js'
 
-/************************************* ETAPE 1 *************************************/
+/************************************* ETAPE 1 : GENERATE MAP *************************************/
 
 ////////////////////////////// INSTANCES //////////////////////////////
 const gameMap = new Map ();
@@ -15,25 +15,41 @@ const mace = new Weapon("mace", 14, "<img class='weaponImg' id='maceImg' src='as
 const axe = new Weapon("axe", 20, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
 const sword = new Weapon("sword", 24, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
 
-const player1 = new Player("Player1", 100, dagger, "nothing", "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weaponPlayer1');
-const player2 = new Player("Player2", 100, dagger, "nothing", "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weaponPlayer2');
+const player1 = new Player("Noctua", 100, dagger, "", "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weaponPlayer1');
+const player2 = new Player("Marcus", 100, dagger, "", "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weaponPlayer2');
 
-////////////////////////////// CHANGEABLE VALUES //////////////////////////////
-const gridContent = gameMap.createArray(10,10); // Choose the number of cases for your grid 
-const obstacleNumber = 10; // Choose the number of obstacles you want 
-const moveNumber = 3; // Choose the number of moves a player can do
+////////////////////////////// CHOOSE INITIAL VALUES //////////////////////////////
+// Choose the number of cases for the grid //
+const gridContent = gameMap.createArray(10,10); 
+// Choose the number of obstacles in the grid //
+const obstacleNumber = 10; 
+// Choose the number of moves a player can do //
+const moveNumber = 3;
 
-////////////////////////////// DISPLAYED INFORMATION GAME //////////////////////////////
+////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
+// Weapons informations
+$("#daggerName").append(dagger.name);
+$("#daggerInfo").append(dagger.damage + " points<br>");
+$("#daggerInfo").append(dagger.img);
+$("#maceName").append(mace.name);
+$("#maceInfo").append(mace.damage + " points<br>");
+$("#maceInfo").append(mace.img);
+$("#axeName").append(axe.name);
+$("#axeInfo").append(axe.damage + " points<br>");
+$("#axeInfo").append(axe.img);
+$("#swordName").append(sword.name);
+$("#swordInfo").append(sword.damage + " points<br>");
+$("#swordInfo").append(sword.img);
 
+// Players Informations
 $("#" + player1.weaponId).append(dagger.img);
+$("#player1Title").append(player1.name + "<br><br>"); 
 $("#player1Title").append(player1.img);
-
 $("#" + player2.weaponId).append(dagger.img);
+$("#player2Title").append(player2.name + "<br><br>"); 
 $("#player2Title").append(player2.img);
 
-
-////////////////////////////// VARIABLES & ARRAYS //////////////////////////////
-
+////////////////////////////// ARRAYS //////////////////////////////
 // Players positions on grid //
 let player1Position = [];
 let player2Position = [];
@@ -49,8 +65,12 @@ weaponArr.push.apply(weaponArr, [mace, axe, sword]);
 const playerArr = []; // Players array//
 playerArr.push.apply(playerArr, [player1, player2]); 
 
-////////////////////////////// ADD OBSTACLES IN OBSTACLE ARRAY AND DISPLAY //////////////////////////////
+////////////////////////////// CREATE A RANDOM NUMBER //////////////////////////////
+function randomNumber(){
+    return Math.floor(Math.random() * gridContent.length)
+}
 
+////////////////////////////// ADD OBSTACLES IN OBSTACLE ARRAY AND DISPLAY //////////////////////////////
 for (let i = 0; i < obstacleArr.length; i++){
     function displayObstacles(){
         const randomRow = randomNumber();
@@ -64,7 +84,6 @@ for (let i = 0; i < obstacleArr.length; i++){
 };
 
 ////////////////////////////// ADD WEAPONS IN WEAPON ARRAY AND DISPLAY //////////////////////////////
-
 for (let i = 0; i < weaponArr.length; i++){
     function displayWeapons(){
         const randomRow = randomNumber();
@@ -78,12 +97,11 @@ for (let i = 0; i < weaponArr.length; i++){
 };
 
 ////////////////////////////// ADD PLAYERS IN PLAYER ARRAY AND DISPLAY //////////////////////////////
-
 for (let i = 0; i < playerArr.length; i++){
     function displayplayer(){
         const randomRow = randomNumber();
         const randomCol = randomNumber();
-        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) { // Test if value around player in Grid Array has Obstacle or player and not push
+        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) { // Test if value around player in Grid Array has obstacle or player //
             displayplayer();
         } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
             displayplayer();
@@ -91,7 +109,7 @@ for (let i = 0; i < playerArr.length; i++){
             displayplayer();
         } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
             displayplayer();
-        } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array
+        } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array if so//
             gridContent[randomRow][randomCol] = playerArr[i];
         } else {
             displayplayer();
@@ -100,7 +118,6 @@ for (let i = 0; i < playerArr.length; i++){
 };
 
 ////////////////////////////// DISPLAY GRID, OBSTACLES, WEAPONS, PLAYERS //////////////////////////////
-
 let grid = document.createElement("div");
 for(let row = 0; row < gridContent.length; row++) {
     let column = gridContent[row];
@@ -123,10 +140,10 @@ for(let row = 0; row < gridContent.length; row++) {
                 $(newColDiv).append(sword.img);
             }
         } else if (column[col] instanceof Player) {
-            if (column[col].name =='Player1') { 
+            if (column[col].name =='Noctua') { 
                 player1Position.push.apply(player1Position, [[row][0], [col][0]]); // Put player 1 position in an array
                 $(newColDiv).append(player1.img); 
-            } else if (column[col].name =='Player2') { 
+            } else if (column[col].name =='Marcus') { 
                 player2Position.push.apply(player2Position, [[row][0], [col][0]]); // Put player 2 position in an array
                 $(newColDiv).append(player2.img); 
             }
@@ -135,18 +152,10 @@ for(let row = 0; row < gridContent.length; row++) {
     $(grid).append(newRowDiv);
 }; $('#wrapper').append(grid);
 
-////////////////////////////// FUNCTIONS //////////////////////////////
-
-// Create random Number
-function randomNumber(){
-    return Math.floor(Math.random() * gridContent.length)
-}
-
-/************************************* ETAPE 2 *************************************/
+/************************************* ETAPE 2 : LES MOUVEMENTS *************************************/
 
 ////////////////////////////// MOVES //////////////////////////////
-
-// Directions //
+// Directions around player in grid//
 const directions = {
     right: [0, 1],
     down: [1, 0],
@@ -154,10 +163,10 @@ const directions = {
     up: [-1, 0]
 };
 
-// Init counter //
-let counter = 0 
+// Counter for number of movement//
+let movementCounter = 0 
 
-// New weapon //
+// Counter  //
 let player1Counter = 0
 let player1PreviousWeapon = [];
 let player2Counter = 0
@@ -166,7 +175,7 @@ let player2PreviousWeapon = [];
 // Init first player playerTurn //
 playerTurn(player1Position, player1, player2);
 
-// Global function for player playerTurns //
+// Global function for player turns //
 function playerTurn(playerPosition, mainPlayer, otherPlayer) {
     $(".stopTurnContainer").empty();
     $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
@@ -174,7 +183,7 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
         $(".stopTurnContainer").empty();
         $(".grid-cell").off();
         $(".grid-cell").removeClass("highlight");
-        counter = 0;
+        movementCounter = 0;
         changeTurn(mainPlayer, otherPlayer);
     });
     Object.values(directions).forEach(function(directionsArrays) {
@@ -196,13 +205,13 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
                 const willFight = checkFight()
                 if (willFight){
                     $(".stopTurnContainer").empty();
-                    return fight(mainPlayer, otherPlayer);
+                    return initFight(mainPlayer, otherPlayer);
                 }
-                counter++;
-                if (counter < moveNumber ) {
+                movementCounter++;
+                if (movementCounter < moveNumber ) {
                     playerTurn(playerPosition, mainPlayer, otherPlayer);   
                 } else {
-                    counter = 0;
+                    movementCounter = 0;
                     return changeTurn(mainPlayer, otherPlayer);
                 }
             })
@@ -231,7 +240,6 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
         mainPlayer.weapon = gridContent[nextRow][nextCol];
         $(`#grid-cell-${nextRow}-${nextCol}`).empty()
         $("#" + mainPlayer.weaponId).append(mainPlayer.weapon.img);
-
         if (mainPlayer === player1){
             player1Counter = 1
             player1PreviousWeapon[0] = nextRow
@@ -259,9 +267,8 @@ function leavePreviousWeapon(mainPlayer){
         gridContent[player2PreviousWeapon[0]][player2PreviousWeapon[1]] = mainPlayer.previousWeapon;
         $(`#grid-cell-${player2PreviousWeapon[0]}-${player2PreviousWeapon[1]}`).append(mainPlayer.previousWeapon.img);
         player2Counter = 0;
+    }
 }
-}
-
 
 // Change player turn//
 function changeTurn(mainPlayer, otherPlayer) {
@@ -281,62 +288,36 @@ function checkFight () {
     } return false;
 }
 
-/************************************* ETAPE 3 *************************************/
+/************************************* STEP 3 : FIGHT *************************************/
 
 ////////////////////////////// FIGHT //////////////////////////////
-// General fight function //
+// Defense variable for fight //
 let defense = false;
 
-// General fight function //
-function fight(mainPlayer, otherPlayer){
+// Display fight container and call fight function //
+function initFight(mainPlayer, otherPlayer){
     $(".stopTurnContainer").empty();
-    $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='Player1Life'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='Player2Life'>" + player2.name + " : " + player2.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
-    fight2(mainPlayer, otherPlayer)
+    $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='NoctuaLife'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='MarcusLife'>" + player2.name + " : " + player2.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
+    fight(mainPlayer, otherPlayer)
 }
 
-// General fight function //
-function fight2(mainPlayer, otherPlayer){
+// Fight function //
+function fight(mainPlayer, otherPlayer){
         $(".playerTurn").empty()
-        $(".playerTurn").append(mainPlayer.name + " turn : ");
+        $(".playerTurn").append(mainPlayer.name + "'s turn : ");
         $(".attack").click(function(){
             $(".fightDescription").empty();
             if (defense == true){
-                otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage/2)
-                $("#"+otherPlayer.name+"Life").empty();
-                $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
-                $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage / 2) + " damages to "+ otherPlayer.name +"</p>");
-                $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
+                displayAttack (2, mainPlayer, otherPlayer);
                 if (otherPlayer.life <= 0 || mainPlayer.life <= 0){
-                    $(".attack").off();
-                    $(".defend").off();
-                    $(".fightDescription").empty();
-                    $("#"+otherPlayer.name+"Life").empty();
-                    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
-                    $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
-                    $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
-                    return $(".retryBtn").click(function(){
-                        window.location.reload();
-                    }); 
+                    return displayEndFight (mainPlayer, otherPlayer);
                 } else if (otherPlayer.life > 0){
                     defense = false
                 }
             } else if (defense == false){
-                otherPlayer.life = otherPlayer.life - mainPlayer.weapon.damage
-                $("#"+otherPlayer.name+"Life").empty();
-                $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
-                $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage) + " damages to "+ otherPlayer.name +"</p>");
-                $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
+                displayAttack (1, mainPlayer, otherPlayer)
                 if (otherPlayer.life <= 0 || mainPlayer.life <= 0){
-                    $(".attack").off();
-                    $(".defend").off();
-                    $(".fightDescription").empty();
-                    $("#"+otherPlayer.name+"Life").empty();
-                    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
-                    $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
-                    $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
-                    return $(".retryBtn").click(function(){
-                        window.location.reload();
-                    }); 
+                    return displayEndFight (mainPlayer, otherPlayer)
                 }
             }
             $(".attack").off();
@@ -355,16 +336,37 @@ function fight2(mainPlayer, otherPlayer){
         });
 }
 
+// What to do when player attack
+function displayAttack (divisionNumber, mainPlayer, otherPlayer){
+    otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage/divisionNumber)
+    $("#"+otherPlayer.name+"Life").empty();
+    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + otherPlayer.life + " life points");
+    $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage/divisionNumber) + " damages to "+ otherPlayer.name +"</p>");
+    $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
+}
+
+// What to do when the function end
+function displayEndFight (mainPlayer, otherPlayer){
+    $(".attack").off();
+                    $(".defend").off();
+                    $(".fightDescription").empty();
+                    $("#"+otherPlayer.name+"Life").empty();
+                    $("#"+otherPlayer.name+"Life").append(otherPlayer.name + " : " + 0 + " life points");
+                    $(".fightDescription").append("<p>" + mainPlayer.name + " WIN !</p>")
+                    $(".fightDescription").append("<button class='retryBtn'> Try again ? </button>")
+                    return $(".retryBtn").click(function(){
+                        window.location.reload();
+                    }); 
+}
+
+// Change the player turn during fight
 function changeTurnFight(mainPlayer, otherPlayer) {
     if (mainPlayer == player1){
-        fight2(player2, player1);
+        fight(player2, player1);
     } else if (otherPlayer == player1) {
-        fight2(player1, player2);
+        fight(player1, player2);
     }
 }
 
-// REGLER LE BUG DU J1 DERNIER CLIQUE POUR FIGHT FAIT BOUGER J2
 // FAIRE QUE LES OBSTACLES NE PEUVENT PAS SPAWNER EN DIAGONALE !!!
-// AJOUTER DIV AVEC JS PLUTOT QUE CREER HTML DIRECT ARMES - IDEM POINTS
-// REGLER PB DARME, ELLE DOIT TOMBER SUR LA CASE RECUEILLI
 // LE RESPONSIVE

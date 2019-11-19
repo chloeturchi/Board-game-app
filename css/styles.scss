@@ -1,176 +1,166 @@
 @import url('https://fonts.googleapis.com/css?family=Turret+Road&display=swap');
 
-body, html {
-    height: 100%;
-    font-family: 'Turret Road', cursive;
-    background-color: rgb(124, 133, 139);
-}
-
-.grid-cell {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 0px;
-    outline: 1px solid #474954;
-    display: inline-block;
-    background: #FFF9F7;
-}
-
-#mainTitle {
-    text-align: center;
-    color: #FFF9F7;
-}
-
-.highlight {
-    background : #F2CC8F;
-    cursor: pointer;
-    &:hover {
-        background-color: rgb(255, 221, 167);
+    body, html {
+        height: 100%;
+        font-family: 'Turret Road', cursive;
+        background-color: rgb(191, 205, 231);
     }
-}
 
-/* containers */
-
-.mainBlock{
-    text-align: center;
-}
-
-#wrapper {
-    float: left;
-    width: auto;
-    height: auto;
-    margin-left: 40px;;
-    margin-right: 10px;
-    display: block;
-    white-space: nowrap;
-}
-
-/* buttons */
-
-button {
-    border: none;
-    color: rgb(255, 255, 255);
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 8px;
-}
-
-.stopTurnBtn {
-    background-color: #E07A5F;
-
-    &:hover {
-        background-color: rgb(228, 143, 119);
+    .mainBlock{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
     }
-    &:active {
-        background-color: rgb(223, 113, 83);
-        padding: 13px 30px;
+
+    #mainTitle {
+        text-align: center;
+        color: #000000;
     }
-}
 
-.retryBtn {
-    background-color: #9AC2C9;
-    color: black;
-    margin-bottom: 20px;
-    &:hover {
-        background-color: rgb(162, 199, 206);
+    .grid-cell {
+        width: 45px;
+        height: 45px;
+        outline: 1px solid #474954;
+        display: inline-block;
+        background: #FFF9F7;
     }
-    &:active {
-        background-color: rgb(134, 188, 197);
-        padding: 13px 30px;
-    }
-}
 
-.attack {
-    background-color: rgb(240, 109, 109);
-    &:hover {
-        background-color: rgb(236, 92, 92);
-    }
-    &:active {
-        background-color: rgb(233, 64, 64);
-        padding: 13px 30px;
-    }
-}
-
-.defend {
-    background-color: #81B29A;
-    &:hover {
-        background-color: rgb(148, 180, 165);
-    }
-    &:active {
-        background-color: #81B29A;
-        padding: 13px 30px;
-    }
-}
-
-/* autre */
-
-.block {
-    display: inline-block;
-    outline: 1px solid #474954;
-    background-color: #FFF9F7;
-}
-
-.stopTurnContainer .block {
-    padding: 20px 80px 40px 80px;
-}
-
-#weaponsContainer {
-    width: auto;
-    img {
-        width: 40px;
-    }
-}
-
-#weaponContainer {
-    padding: 0px 95px 5px 95px;
-}
-
-.weaponBlock {
-    display: inline-block;
-    margin: 0px 20px;
-}
-
-.actualWeapon {
-    margin-bottom: 0px;
-}
-
-.playerContainer {
-    margin: 10px 0px;
-    padding: 0px 140px;
-}
-
-/* fight */
-#fightContainer {
-    .block {
+    #wrapper {
+        width: auto;
+        height: auto;
+        text-align: center;
+        white-space: nowrap;
         margin-bottom: 10px;
+        margin: 0px 10px 10px 10px
+
     }
-}
 
-.fightBlock {
-    display: inline-block;
-    margin: 0px 10px 0px 10px
-}
+    .block {
+        outline: 1px solid #474954;
+        background-color: #FFF9F7;
+    }
 
-.playerLife{
-    display: inline-block;
-    margin: 20px 30px;
-    font-weight: bold;
-    background-color: #9AC2C9;
-    padding: 10px;
-    border-radius: 8px;
-}
+    #weaponContainer {
+        text-align: center;
+        img {
+            width: 40px;
+        }
+        padding: 31px 0px;
+        margin: 0px 10px 10px 0px
+    }
+
+    .weaponBlock {
+        display: inline-block;
+        margin: 0px 10px;
+    }
+
+    .playersContainer {
+        text-align: center;
+        img {
+            width: 40px;
+        }
+        margin: 0px 10px 10px 0px
+
+    }
+
+    .stopTurnContainer .block {
+        padding: 47px 20px 48px 20px;
 
 
-.fightBtn {
-    margin: 20px 10px;
-}
+    }
 
-#comments {
-    width: 600px;
-    background-color: rgb(228, 233, 236);
-    padding: 2px;
-    height: auto;
-}
+    #fightContainer .block {
+        text-align: center;
+        margin: 0px 10px 10px 10px;
+        padding: 10px 10px 10px 10px
+    }
+    
+    .fightBlock {
+        display: inline-block;
+    }
+
+    .fightBtn {
+        margin: 20px 10px;
+    }
+    
+    .playerLife {
+        display: inline-block;
+        margin: 20px 30px;
+        font-weight: bold;
+        background-color: #9AC2C9;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    #comments {
+        width: 600px;
+        background-color: rgb(228, 233, 236);
+        padding: 2px;
+        height: auto;
+    }
+
+    .highlight {
+        background : #F2CC8F;
+        cursor: pointer;
+        &:hover {
+            background-color: rgb(255, 221, 167);
+        }
+    }
+
+    button {
+        border: none;
+        color: rgb(255, 255, 255);
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    .stopTurnBtn {
+        background-color: #E07A5F;
+        &:hover {
+            background-color: rgb(228, 143, 119);
+        }
+        &:active {
+            background-color: rgb(223, 113, 83);
+            padding: 13px 30px;
+        }
+    }
+
+    .retryBtn {
+        background-color: #9AC2C9;
+        color: black;
+        margin-bottom: 0px;
+        &:hover {
+            background-color: rgb(162, 199, 206);
+        }
+        &:active {
+            background-color: rgb(134, 188, 197);
+            padding: 13px 30px;
+        }
+    }
+
+    .attack {
+        background-color: rgb(240, 109, 109);
+        &:hover {
+            background-color: rgb(236, 92, 92);
+        }
+        &:active {
+            background-color: rgb(233, 64, 64);
+            padding: 13px 30px;
+        }
+    }
+
+    .defend {
+        background-color: #81B29A;
+        &:hover {
+            background-color: rgb(148, 180, 165);
+        }
+        &:active {
+            background-color: #81B29A;
+            padding: 13px 30px;
+        }
+    }

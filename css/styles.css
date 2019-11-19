@@ -2,21 +2,103 @@
 body, html {
   height: 100%;
   font-family: 'Turret Road', cursive;
-  background-color: #7c858b;
+  background-color: #bfcde7;
+}
+
+.mainBlock {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#mainTitle {
+  text-align: center;
+  color: #000000;
 }
 
 .grid-cell {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 0px;
+  width: 45px;
+  height: 45px;
   outline: 1px solid #474954;
   display: inline-block;
   background: #FFF9F7;
 }
 
-#mainTitle {
+#wrapper {
+  width: auto;
+  height: auto;
   text-align: center;
-  color: #FFF9F7;
+  white-space: nowrap;
+  margin-bottom: 10px;
+  margin: 0px 10px 10px 10px;
+}
+
+.block {
+  outline: 1px solid #474954;
+  background-color: #FFF9F7;
+}
+
+#weaponContainer {
+  text-align: center;
+  padding: 31px 0px;
+  margin: 0px 10px 10px 0px;
+}
+
+#weaponContainer img {
+  width: 40px;
+}
+
+.weaponBlock {
+  display: inline-block;
+  margin: 0px 10px;
+}
+
+.playersContainer {
+  text-align: center;
+  margin: 0px 10px 10px 0px;
+}
+
+.playersContainer img {
+  width: 40px;
+}
+
+.stopTurnContainer .block {
+  padding: 47px 20px 48px 20px;
+}
+
+#fightContainer .block {
+  text-align: center;
+  margin: 0px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.fightBlock {
+  display: inline-block;
+}
+
+.fightBtn {
+  margin: 20px 10px;
+}
+
+.playerLife {
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  background-color: #9AC2C9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#comments {
+  width: 600px;
+  background-color: #e4e9ec;
+  padding: 2px;
+  height: auto;
 }
 
 .highlight {
@@ -28,22 +110,6 @@ body, html {
   background-color: #ffdda7;
 }
 
-/* containers */
-.mainBlock {
-  text-align: center;
-}
-
-#wrapper {
-  float: left;
-  width: auto;
-  height: auto;
-  margin-left: 40px;
-  margin-right: 10px;
-  display: block;
-  white-space: nowrap;
-}
-
-/* buttons */
 button {
   border: none;
   color: white;
@@ -72,7 +138,7 @@ button {
 .retryBtn {
   background-color: #9AC2C9;
   color: black;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .retryBtn:hover {
@@ -108,72 +174,5 @@ button {
 .defend:active {
   background-color: #81B29A;
   padding: 13px 30px;
-}
-
-/* autre */
-.block {
-  display: inline-block;
-  outline: 1px solid #474954;
-  background-color: #FFF9F7;
-}
-
-.stopTurnContainer .block {
-  padding: 20px 80px 40px 80px;
-}
-
-#weaponsContainer {
-  width: auto;
-}
-
-#weaponsContainer img {
-  width: 40px;
-}
-
-#weaponContainer {
-  padding: 0px 95px 5px 95px;
-}
-
-.weaponBlock {
-  display: inline-block;
-  margin: 0px 20px;
-}
-
-.actualWeapon {
-  margin-bottom: 0px;
-}
-
-.playerContainer {
-  margin: 10px 0px;
-  padding: 0px 140px;
-}
-
-/* fight */
-#fightContainer .block {
-  margin-bottom: 10px;
-}
-
-.fightBlock {
-  display: inline-block;
-  margin: 0px 10px 0px 10px;
-}
-
-.playerLife {
-  display: inline-block;
-  margin: 20px 30px;
-  font-weight: bold;
-  background-color: #9AC2C9;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.fightBtn {
-  margin: 20px 10px;
-}
-
-#comments {
-  width: 600px;
-  background-color: #e4e9ec;
-  padding: 2px;
-  height: auto;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -10,59 +10,45 @@
 
     <body>
         <h1 id="mainTitle">FIGHT GAME</h1>
-        
         <div class="mainBlock">
-            
-            <div id="wrapper">
-            </div>
+            <div id="wrapper"></div>
 
-            <div id="fightContainer">
-            </div>
-
+            <div id="fightContainer"></div>
             <div id="weaponsContainer">
-
                 <div class="block" id="weaponContainer">
-                    <div class="weaponBlock" id="weaponDagger">
-                        <h4>Dagger</h4>
-                        <p id="infoDagger">10 point</p>
-                        <img src='assets/img/dagger.svg'/>
-                    </div>
-                    <div class="weaponBlock" id="weaponBow">
-                        <h4>Mace</h4>
-                        <p id="infoMace">14 point</p>
-                        <img src='assets/img/mace.svg'/>
-                    </div>
-                    <div class="weaponBlock" id="weaponAxe">
-                        <h4>Axe</h4>
-                        <p id="infoAxe">20 point</p>
-                        <img src='assets/img/axe.svg'/>
-                    </div>
-                    <div class="weaponBlock" id="weaponSword">
-                        <h4>Sword</h4>
-                        <p id="infoDagger">24 point </p>
-                        <img src='assets/img/sword.svg'/>
-                    </div>
-                </div>
-
-                <div class="playerContainer block">
-                    <div class="weaponBlock" >
-                        <h4 class="playerTitle" id="player1Title">Player 1 <br><br></h4>
-                        <p class="actualWeapon" id="weaponPlayer1">actual weapon :  <br><br></p>
+                    <div class="weaponBlock">
+                        <h4 id="daggerName"></h4>
+                        <p id="daggerInfo"></p>
                     </div>
                     <div class="weaponBlock">
-                        <h4 class="playerTitle" id="player2Title">Player 2 <br><br></h4>
-                        <p class="actualWeapon" id="weaponPlayer2">actual weapon : <br><br></p>
+                        <h4 id="maceName"></h4>
+                        <p id="maceInfo"></p>
+                    </div>
+                    <div class="weaponBlock">
+                        <h4 id="axeName"></h4>
+                        <p id="axeInfo"></p>
+                    </div>
+                    <div class="weaponBlock">
+                        <h4 id="swordName"></h4>
+                        <p id="swordInfo"></p>
                     </div>
                 </div>
-
             </div>
 
-            <div class="stopTurnContainer">
+            <div class="playersContainer">
+                <div class="block" id="playerContainer">
+                    <div class="weaponBlock" >
+                        <h4 class="playerTitle" id="player1Title"></h4>
+                        <p class="actualWeapon" id="weaponPlayer1">actual weapon : <br></p>
+                    </div>
+                    <div class="weaponBlock">
+                        <h4 class="playerTitle" id="player2Title"></h4>
+                        <p class="actualWeapon" id="weaponPlayer2">actual weapon : <br></p>
+                    </div>
+                </div>
             </div>
-
+            <div class="stopTurnContainer"></div>
         </div>
-
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script type="module" src="js/main.js"></script>
     </body>
