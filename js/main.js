@@ -249,7 +249,6 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
             player2PreviousWeapon[0] = nextRow
             player2PreviousWeapon[1] = nextCol
         }
-
 }
 
 // Put previousweapon in previous case //
@@ -304,7 +303,7 @@ function initFight(mainPlayer, otherPlayer){
 // Fight function //
 function fight(mainPlayer, otherPlayer){
         $(".playerTurn").empty()
-        $(".playerTurn").append(mainPlayer.name + "'s turn : ");
+        $(".playerTurn").append("<div class='" + mainPlayer.name + "Turn'>" + mainPlayer.name + "' turn : </div>");
         $(".attack").click(function(){
             $(".fightDescription").empty();
             if (defense == true){

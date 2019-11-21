@@ -2,7 +2,7 @@
 body, html {
   height: 100%;
   font-family: 'Turret Road', cursive;
-  background-color: #bfcde7;
+  background-color: #989a9c;
 }
 
 .mainBlock {
@@ -21,6 +21,7 @@ body, html {
   color: #000000;
 }
 
+/* MAP */
 .grid-cell {
   width: 45px;
   height: 45px;
@@ -38,6 +39,15 @@ body, html {
   margin: 0px 10px 10px 10px;
 }
 
+#player1Img {
+  background-color: #b29ac9;
+}
+
+#player2Img {
+  background-color: #afc99a;
+}
+
+/* CONTAINERS */
 .block {
   outline: 1px solid #474954;
   background-color: #FFF9F7;
@@ -45,8 +55,7 @@ body, html {
 
 #weaponContainer {
   text-align: center;
-  padding: 31px 0px;
-  margin: 0px 10px 10px 0px;
+  margin: 0px 10px 0px 0px;
 }
 
 #weaponContainer img {
@@ -55,7 +64,19 @@ body, html {
 
 .weaponBlock {
   display: inline-block;
-  margin: 0px 10px;
+  margin: 29px 15px;
+}
+
+.weaponName {
+  margin: 40px 0px;
+}
+
+.playerBlock {
+  display: inline-block;
+}
+
+.weaponImg {
+  margin-top: 0px;
 }
 
 .playersContainer {
@@ -68,13 +89,15 @@ body, html {
 }
 
 .stopTurnContainer .block {
-  padding: 47px 20px 48px 20px;
+  padding: 65px 40px;
+  margin-bottom: 10px;
 }
 
+/* FIGHT CONTAINER */
 #fightContainer .block {
   text-align: center;
-  margin: 0px 10px 10px 10px;
-  padding: 10px 10px 10px 10px;
+  margin: 0px 0px 10px 0px;
+  padding: 10px 0px 10px 0px;
 }
 
 .fightBlock {
@@ -89,7 +112,6 @@ body, html {
   display: inline-block;
   margin: 20px 30px;
   font-weight: bold;
-  background-color: #9AC2C9;
   padding: 10px;
   border-radius: 8px;
 }
@@ -101,6 +123,51 @@ body, html {
   height: auto;
 }
 
+#NoctuaLife {
+  background-color: #b29ac9;
+}
+
+#MarcusLife {
+  background-color: #afc99a;
+}
+
+.NoctuaTurn {
+  background-color: #b29ac9;
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.MarcusTurn {
+  background-color: #afc99a;
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#player1Title {
+  background-color: #b29ac9;
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#player2Title {
+  background-color: #afc99a;
+  display: inline-block;
+  margin: 20px 30px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* OTHER */
 .highlight {
   background: #F2CC8F;
   cursor: pointer;
@@ -110,9 +177,10 @@ body, html {
   background-color: #ffdda7;
 }
 
+/* BUTTONS */
 button {
   border: none;
-  color: white;
+  color: #020202;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
@@ -123,15 +191,15 @@ button {
 }
 
 .stopTurnBtn {
-  background-color: #E07A5F;
+  background: #F2CC8F;
 }
 
 .stopTurnBtn:hover {
-  background-color: #e48f77;
+  background-color: #ffdda7;
 }
 
 .stopTurnBtn:active {
-  background-color: #df7153;
+  background-color: #ffdda7;
   padding: 13px 30px;
 }
 
@@ -151,28 +219,28 @@ button {
 }
 
 .attack {
-  background-color: #f06d6d;
+  background-color: #e4e9ec;
 }
 
 .attack:hover {
-  background-color: #ec5c5c;
+  background-color: #d48e8e;
 }
 
 .attack:active {
-  background-color: #e94040;
+  background-color: #e49797;
   padding: 13px 30px;
 }
 
 .defend {
-  background-color: #81B29A;
+  background-color: #e4e9ec;
 }
 
 .defend:hover {
-  background-color: #94b4a5;
+  background-color: #99d4d8;
 }
 
 .defend:active {
-  background-color: #81B29A;
+  background-color: #a7e1e6;
   padding: 13px 30px;
 }
 /*# sourceMappingURL=styles.css.map */
