@@ -3,24 +3,37 @@ import Obstacle from './obstacle.js'
 import Weapon from './weapon.js'
 import Player from './character.js'
 
-// Remplacer Img 
+// Remplacer Img voir t
 
 /************************************* ETAPE 1 : GENERATE MAP *************************************/
 
 ////////////////////////////// INSTANCES //////////////////////////////
 const gameMap = new Map ();
 
-const obstacle = new Obstacle("<img class='obstacleImg' src='assets/img/obstacle.svg'/>");
+const obstacle = new Obstacle();
 
-const dagger = new Weapon("dagger", 10, "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
-const mace = new Weapon("mace", 14, "<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>");
-const axe = new Weapon("axe", 20, "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
-const sword = new Weapon("sword", 24, "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
+const dagger = new Weapon("dagger", 10);
+const mace = new Weapon("mace", 14);
+const axe = new Weapon("axe", 20);
+const sword = new Weapon("sword", 24);
 
-const player1 = new Player("Noctua", 100, dagger, "", "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>", 'weaponPlayer1');
-const player2 = new Player("Marcus", 100, dagger, "", "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>", 'weaponPlayer2');
+const player1 = new Player("Noctua", 100, dagger);
+const player2 = new Player("Marcus", 100, dagger);
 
-const gridContent = gameMap.createArray(10,10); 
+const gridContent = gameMap.createArray(10,10);
+
+////////////////////////////// IMAGES //////////////////////////////
+const obstacleImage = "<img class='obstacleImg' src='assets/img/obstacle.svg'/>";
+
+const daggerImage = "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>";
+const maceImage = "<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>";
+const axeImage = "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>";
+const swordImage = "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>";
+const weaponImages = { daggerImage, maceImage, axeImage, swordImage }
+
+const NoctuaImage = "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>";
+const MarcusImage = "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>";
+const playerImages = { NoctuaImage, MarcusImage }
 
 ////////////////////////////// CHOOSE INITIAL VALUES //////////////////////////////
 // Choose the number of obstacles in the grid //
@@ -33,24 +46,24 @@ const moveNumber = 3;
 // Weapons informations
 $("#daggerName").append(dagger.name);
 $("#daggerInfo").append(dagger.damage + " points<br>");
-$("#daggerInfo").append(dagger.img);
+$("#daggerInfo").append(daggerImage);
 $("#maceName").append(mace.name);
 $("#maceInfo").append(mace.damage + " points<br>");
-$("#maceInfo").append(mace.img);
+$("#maceInfo").append(maceImage);
 $("#axeName").append(axe.name);
 $("#axeInfo").append(axe.damage + " points<br>");
-$("#axeInfo").append(axe.img);
+$("#axeInfo").append(axeImage);
 $("#swordName").append(sword.name);
 $("#swordInfo").append(sword.damage + " points<br>");
-$("#swordInfo").append(sword.img);
+$("#swordInfo").append(swordImage);
 
 // Players Informations
-$("#" + player1.weaponId).append(dagger.img);
+$("#" + player1.name).append(daggerImage);
 $("#player1Title").append(player1.name + "<br><br>"); 
-$("#player1Title").append(player1.img);
-$("#" + player2.weaponId).append(dagger.img);
+$("#player1Title").append(NoctuaImage);
+$("#" + player2.name).append(daggerImage);
 $("#player2Title").append(player2.name + "<br><br>"); 
-$("#player2Title").append(player2.img);
+$("#player2Title").append(MarcusImage);
 
 ////////////////////////////// ARRAYS //////////////////////////////
 // Players positions on grid //
@@ -133,22 +146,22 @@ for(let row = 0; row < gridContent.length; row++) {
         newColDiv.setAttribute("class", "grid-cell");
         newRowDiv.appendChild(newColDiv);
         if (column[col] instanceof Obstacle) {
-            $(newColDiv).append(obstacle.img);
+            $(newColDiv).append(obstacleImage);
         } else if (column[col] instanceof Weapon) {
             if (column[col].name == 'mace') {
-                $(newColDiv).append(mace.img);
+                $(newColDiv).append(maceImage);
             } else if (column[col].name == 'axe') {
-                $(newColDiv).append(axe.img);
+                $(newColDiv).append(axeImage);
             } else if (column[col].name == 'sword') {
-                $(newColDiv).append(sword.img);
+                $(newColDiv).append(swordImage);
             }
         } else if (column[col] instanceof Player) {
             if (column[col].name =='Noctua') { 
                 player1Position.push.apply(player1Position, [[row][0], [col][0]]); // Put player 1 position in an array
-                $(newColDiv).append(player1.img); 
+                $(newColDiv).append(NoctuaImage); 
             } else if (column[col].name =='Marcus') { 
                 player2Position.push.apply(player2Position, [[row][0], [col][0]]); // Put player 2 position in an array
-                $(newColDiv).append(player2.img); 
+                $(newColDiv).append(MarcusImage); 
             }
         }
     } 
@@ -200,7 +213,6 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
         if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
             $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
             $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
-
                 if (gridContent[nextRow][nextCol] instanceof Weapon){
                     weaponClicked (nextRow, nextCol, mainPlayer, playerPosition);
                 }
@@ -238,10 +250,10 @@ function changeTurn(mainPlayer, otherPlayer) {
 // What to do when player click on a weapon //
 function weaponClicked (nextRow, nextCol, mainPlayer){
     mainPlayer.previousWeapon = mainPlayer.weapon
-    $("#" + mainPlayer.weaponId + " img").remove();
+    $("#" + mainPlayer.name + " img").remove();
     mainPlayer.weapon = gridContent[nextRow][nextCol];
     $(`#grid-cell-${nextRow}-${nextCol}`).empty()
-    $("#" + mainPlayer.weaponId).append(mainPlayer.weapon.img);
+    $("#" + mainPlayer.name).append(weaponImages[mainPlayer.weapon.name + "Image"]); 
     if (mainPlayer === player1){
         player1Counter = 1
         player1PreviousWeapon[0] = nextRow
@@ -256,7 +268,7 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
 // What to do when click on a case //
 function move (nextRow, nextCol, mainPlayer, playerPosition){
     $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
-    $(`#grid-cell-${nextRow}-${nextCol}`).append(mainPlayer.img); // Ajouter L'image du player sur la case cliquée
+    $(`#grid-cell-${nextRow}-${nextCol}`).append(playerImages[mainPlayer.name + "Image"]); // Ajouter L'image du player sur la case cliquée
     gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
     gridContent[nextRow][nextCol] = mainPlayer
     $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
@@ -271,14 +283,14 @@ function leavePreviousWeapon(mainPlayer){
         player1Counter = player1Counter + 1
     } else if (mainPlayer == player1 && player1Counter === 2){
         gridContent[player1PreviousWeapon[0]][player1PreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${player1PreviousWeapon[0]}-${player1PreviousWeapon[1]}`).append(mainPlayer.previousWeapon.img);
+        $(`#grid-cell-${player1PreviousWeapon[0]}-${player1PreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
         player1Counter = 0;
     } 
     if (mainPlayer == player2 && player2Counter === 1){
         player2Counter = player2Counter + 1
     } else if (mainPlayer == player2 && player2Counter === 2){
         gridContent[player2PreviousWeapon[0]][player2PreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${player2PreviousWeapon[0]}-${player2PreviousWeapon[1]}`).append(mainPlayer.previousWeapon.img);
+        $(`#grid-cell-${player2PreviousWeapon[0]}-${player2PreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
         player2Counter = 0;
     }
 }
