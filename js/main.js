@@ -3,6 +3,8 @@ import Obstacle from './obstacle.js'
 import Weapon from './weapon.js'
 import Player from './character.js'
 
+// Remplacer Img 
+
 /************************************* ETAPE 1 : GENERATE MAP *************************************/
 
 ////////////////////////////// INSTANCES //////////////////////////////
@@ -27,6 +29,7 @@ const obstacleNumber = 10;
 const moveNumber = 3;
 
 ////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
+
 // Weapons informations
 $("#daggerName").append(dagger.name);
 $("#daggerInfo").append(dagger.damage + " points<br>");
