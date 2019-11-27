@@ -2,7 +2,7 @@
 body, html {
   height: 100%;
   font-family: 'Turret Road', cursive;
-  background-color: #989a9c;
+  background-color: #cde0e6;
 }
 
 .mainBlock {
@@ -206,7 +206,7 @@ button {
 .retryBtn {
   background-color: #9AC2C9;
   color: black;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 
 .retryBtn:hover {

@@ -3,7 +3,7 @@
     body, html {
         height: 100%;
         font-family: 'Turret Road', cursive;
-        background-color: rgb(152, 154, 156);
+        background-color: rgb(205, 224, 230);
     }
 
     .mainBlock{
@@ -199,7 +199,7 @@
     .retryBtn {
         background-color: #9AC2C9;
         color: black;
-        margin-bottom: 0px;
+        margin-bottom: 10px;
         &:hover {
             background-color: rgb(162, 199, 206);
         }
