@@ -3,8 +3,6 @@ import Obstacle from './obstacle.js'
 import Weapon from './weapon.js'
 import Player from './character.js'
 
-// Remplacer Img voir t
-
 /************************************* ETAPE 1 : GENERATE MAP *************************************/
 
 ////////////////////////////// INSTANCES //////////////////////////////
@@ -17,10 +15,8 @@ const mace = new Weapon("mace", 14);
 const axe = new Weapon("axe", 20);
 const sword = new Weapon("sword", 24);
 
-const player1 = new Player("Noctua", 100, dagger);
-const player2 = new Player("Marcus", 100, dagger);
-
-const gridContent = gameMap.createArray(10,10);
+const noctua = new Player("Noctua", 100, dagger);
+const marcus = new Player("Marcus", 100, dagger);
 
 ////////////////////////////// IMAGES //////////////////////////////
 const obstacleImage = "<img class='obstacleImg' src='assets/img/obstacle.svg'/>";
@@ -31,9 +27,30 @@ const axeImage = "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>"
 const swordImage = "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>";
 const weaponImages = { daggerImage, maceImage, axeImage, swordImage }
 
-const NoctuaImage = "<img class='playerImg' id ='player1Img' src='assets/img/perso1.svg'/>";
-const MarcusImage = "<img class='playerImg' id ='player2Img' src='assets/img/perso2.svg'/>";
+const NoctuaImage = "<img class='playerImg' id ='noctuaImg' src='assets/img/perso1.svg'/>";
+const MarcusImage = "<img class='playerImg' id ='marcusImg' src='assets/img/perso2.svg'/>";
 const playerImages = { NoctuaImage, MarcusImage }
+
+////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
+
+// Weapons informations
+$("#daggerName").append(dagger.name);
+$("#daggerInfo").append(dagger.damage + " points<br>", daggerImage);
+$("#maceName").append(mace.name);
+$("#maceInfo").append(mace.damage + " points<br>", maceImage) ;
+$("#axeName").append(axe.name);
+$("#axeInfo").append(axe.damage + " points<br>", axeImage);
+$("#swordName").append(sword.name);
+$("#swordInfo").append(sword.damage + " points<br>", swordImage);
+
+// Players Informations
+$("#" + noctua.name).append(daggerImage);
+$("#noctuaTitle").append(noctua.name + "<br><br>", NoctuaImage); 
+$("#" + marcus.name).append(daggerImage);
+$("#marcusTitle").append(marcus.name + "<br><br>", MarcusImage); 
+
+////////////////////////////// CREATE MAP ARRAY //////////////////////////////
+const gridContent = gameMap.createArray(10,10);
 
 ////////////////////////////// CHOOSE INITIAL VALUES //////////////////////////////
 // Choose the number of obstacles in the grid //
@@ -41,34 +58,10 @@ const obstacleNumber = 10;
 // Choose the number of moves a player can do //
 const moveNumber = 3;
 
-////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
-
-// Weapons informations
-$("#daggerName").append(dagger.name);
-$("#daggerInfo").append(dagger.damage + " points<br>");
-$("#daggerInfo").append(daggerImage);
-$("#maceName").append(mace.name);
-$("#maceInfo").append(mace.damage + " points<br>");
-$("#maceInfo").append(maceImage);
-$("#axeName").append(axe.name);
-$("#axeInfo").append(axe.damage + " points<br>");
-$("#axeInfo").append(axeImage);
-$("#swordName").append(sword.name);
-$("#swordInfo").append(sword.damage + " points<br>");
-$("#swordInfo").append(swordImage);
-
-// Players Informations
-$("#" + player1.name).append(daggerImage);
-$("#player1Title").append(player1.name + "<br><br>"); 
-$("#player1Title").append(NoctuaImage);
-$("#" + player2.name).append(daggerImage);
-$("#player2Title").append(player2.name + "<br><br>"); 
-$("#player2Title").append(MarcusImage);
-
 ////////////////////////////// ARRAYS //////////////////////////////
 // Players positions on grid //
-let player1Position = [];
-let player2Position = [];
+let noctuaPosition = [];
+let marcusPosition = [];
 
 const obstacleArr = []; // Obstacles array//
 for (let i = 0; i < obstacleNumber; i++) {
@@ -79,7 +72,7 @@ const weaponArr = []; // Weapons array//
 weaponArr.push.apply(weaponArr, [mace, axe, sword]);
 
 const playerArr = []; // Players array//
-playerArr.push.apply(playerArr, [player1, player2]); 
+playerArr.push.apply(playerArr, [noctua, marcus]); 
 
 ////////////////////////////// CREATE A RANDOM NUMBER //////////////////////////////
 function randomNumber(){
@@ -157,10 +150,10 @@ for(let row = 0; row < gridContent.length; row++) {
             }
         } else if (column[col] instanceof Player) {
             if (column[col].name =='Noctua') { 
-                player1Position.push.apply(player1Position, [[row][0], [col][0]]); // Put player 1 position in an array
+                noctuaPosition.push.apply(noctuaPosition, [[row][0], [col][0]]); // Put player 1 position in an array
                 $(newColDiv).append(NoctuaImage); 
             } else if (column[col].name =='Marcus') { 
-                player2Position.push.apply(player2Position, [[row][0], [col][0]]); // Put player 2 position in an array
+                marcusPosition.push.apply(marcusPosition, [[row][0], [col][0]]); // Put player 2 position in an array
                 $(newColDiv).append(MarcusImage); 
             }
         }
@@ -180,16 +173,17 @@ const directions = {
 };
 
 // Counter 
-let movementCounter = 0 
+let movementCounter = 0 // Count number of moves per turn (here it is 3 maximum)
 
-let player1Counter = 0
-let player1PreviousWeapon = [];
+let NoctuaPreviousWeapon = []; // Store where (array col and row) to leave previous weapon
+let NoctuaWeaponCounter = 0 // If counter = 2, leave behind the previous weapon thanks to stored datas
 
-let player2Counter = 0
-let player2PreviousWeapon = [];
+let MarcusPreviousWeapon = []; // Store where (col and row) to leave previous weapon
+let MarcusWeaponCounter = 0 // If counter = 2, leave behind the previous weapon thanks to stored datas
+
 
 // Init first player playerTurn //
-playerTurn(player1Position, player1, player2);
+playerTurn(noctuaPosition, noctua, marcus);
 
 // Global function for player turns //
 function playerTurn(playerPosition, mainPlayer, otherPlayer) {
@@ -240,10 +234,10 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
 
 // Change player turn//
 function changeTurn(mainPlayer, otherPlayer) {
-    if (mainPlayer == player1){
-        playerTurn(player2Position, otherPlayer, mainPlayer);
-    } else if (mainPlayer == player2) {
-        playerTurn(player1Position, otherPlayer, mainPlayer);
+    if (mainPlayer == noctua){
+        playerTurn(marcusPosition, otherPlayer, mainPlayer);
+    } else if (mainPlayer == marcus) {
+        playerTurn(noctuaPosition, otherPlayer, mainPlayer);
     }
 }
 
@@ -254,14 +248,14 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
     mainPlayer.weapon = gridContent[nextRow][nextCol];
     $(`#grid-cell-${nextRow}-${nextCol}`).empty()
     $("#" + mainPlayer.name).append(weaponImages[mainPlayer.weapon.name + "Image"]); 
-    if (mainPlayer === player1){
-        player1Counter = 1
-        player1PreviousWeapon[0] = nextRow
-        player1PreviousWeapon[1] = nextCol
-    } else if (mainPlayer === player2){
-        player2Counter = 1
-        player2PreviousWeapon[0] = nextRow
-        player2PreviousWeapon[1] = nextCol
+    if (mainPlayer === noctua){
+        NoctuaWeaponCounter = 1
+        NoctuaPreviousWeapon[0] = nextRow
+        NoctuaPreviousWeapon[1] = nextCol
+    } else if (mainPlayer === marcus){
+        MarcusWeaponCounter = 1
+        MarcusPreviousWeapon[0] = nextRow
+        MarcusPreviousWeapon[1] = nextCol
     }
 }
 
@@ -279,26 +273,26 @@ function move (nextRow, nextCol, mainPlayer, playerPosition){
 
 // Put previousweapon in previous case //
 function leavePreviousWeapon(mainPlayer){
-    if (mainPlayer == player1 && player1Counter === 1){
-        player1Counter = player1Counter + 1
-    } else if (mainPlayer == player1 && player1Counter === 2){
-        gridContent[player1PreviousWeapon[0]][player1PreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${player1PreviousWeapon[0]}-${player1PreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
-        player1Counter = 0;
+    if (mainPlayer == noctua && NoctuaWeaponCounter === 1){
+        NoctuaWeaponCounter = NoctuaWeaponCounter + 1
+    } else if (mainPlayer == noctua && NoctuaWeaponCounter === 2){
+        gridContent[NoctuaPreviousWeapon[0]][NoctuaPreviousWeapon[1]] = mainPlayer.previousWeapon;
+        $(`#grid-cell-${NoctuaPreviousWeapon[0]}-${NoctuaPreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
+        NoctuaWeaponCounter = 0;
     } 
-    if (mainPlayer == player2 && player2Counter === 1){
-        player2Counter = player2Counter + 1
-    } else if (mainPlayer == player2 && player2Counter === 2){
-        gridContent[player2PreviousWeapon[0]][player2PreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${player2PreviousWeapon[0]}-${player2PreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
-        player2Counter = 0;
+    if (mainPlayer == marcus && MarcusWeaponCounter === 1){
+        MarcusWeaponCounter = MarcusWeaponCounter + 1
+    } else if (mainPlayer == marcus && MarcusWeaponCounter === 2){
+        gridContent[MarcusPreviousWeapon[0]][MarcusPreviousWeapon[1]] = mainPlayer.previousWeapon;
+        $(`#grid-cell-${MarcusPreviousWeapon[0]}-${MarcusPreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
+        MarcusWeaponCounter = 0;
     }
 }
 
 // Check if there is a fight //
 function checkFight () {
-    let rowDif = Math.abs(player1Position[0] - player2Position[0]);
-    let colDif = Math.abs(player1Position[1] - player2Position[1]);
+    let rowDif = Math.abs(noctuaPosition[0] - marcusPosition[0]);
+    let colDif = Math.abs(noctuaPosition[1] - marcusPosition[1]);
     if (rowDif + colDif === 1) {
         return true;
     } return false;
@@ -313,7 +307,7 @@ let defense = false;
 // Display fight container and call fight function //
 function initFight(mainPlayer, otherPlayer){
     $(".stopTurnContainer").empty();
-    $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='NoctuaLife'>" + player1.name + " : " + player1.life + " life points</p><p class='playerLife' id='MarcusLife'>" + player2.name + " : " + player2.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
+    $("#fightContainer").append("<div class='block'><h3>Let's Fight</h3><div class='fightBlock'><p class='playerTurn'></p></div><div class='fightBlock'><button class='attack fightBtn' type='button'>Attack</button><button class='defend fightBtn' type='button'>Defend</button></div><div class='playerLifeContainer'><p class='playerLife' id='NoctuaLife'>" + noctua.name + " : " + noctua.life + " life points</p><p class='playerLife' id='MarcusLife'>" + marcus.name + " : " + marcus.life + " life points</p></div><div class='fightDescription' id='comments'></div> </div>");
     fight(mainPlayer, otherPlayer)
 }
 
@@ -354,10 +348,10 @@ function fight(mainPlayer, otherPlayer){
 
 // Change the player turn during fight
 function changeTurnFight(mainPlayer, otherPlayer) {
-    if (mainPlayer == player1){
-        fight(player2, player1);
-    } else if (otherPlayer == player1) {
-        fight(player1, player2);
+    if (mainPlayer == noctua){
+        fight(marcus, noctua);
+    } else if (otherPlayer == noctua) {
+        fight(noctua, marcus);
     }
 }
 
