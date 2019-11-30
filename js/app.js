@@ -35,7 +35,7 @@ const playerImages = { NoctuaImage, MarcusImage }
 
 ////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
 
-// Weapons informations
+// Weapons informations //
 $("#daggerName").append(dagger.name);
 $("#daggerInfo").append(dagger.damage + " points<br>", daggerImage);
 $("#maceName").append(mace.name);
@@ -45,7 +45,7 @@ $("#axeInfo").append(axe.damage + " points<br>", axeImage);
 $("#swordName").append(sword.name);
 $("#swordInfo").append(sword.damage + " points<br>", swordImage);
 
-// Players Informations
+// Players Informations //
 $("#" + noctua.name).append(daggerImage);
 $("#noctuaTitle").append(noctua.name + "<br><br>", NoctuaImage); 
 $("#" + marcus.name).append(daggerImage);
@@ -118,7 +118,7 @@ for (let i = 0; i < playerArr.length; i++){
             addPlayer();
         } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
             addPlayer();
-        } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array if so//
+        } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array //
             gridContent[randomRow][randomCol] = playerArr[i];
         } else {
             addPlayer();
@@ -150,10 +150,10 @@ for(let row = 0; row < gridContent.length; row++) {
             }
         } else if (column[col] instanceof Player) {
             if (column[col].name =='Noctua') { 
-                noctuaPosition.push.apply(noctuaPosition, [[row][0], [col][0]]); // Put player 1 position in an array
+                noctuaPosition.push.apply(noctuaPosition, [[row][0], [col][0]]); // Put noctua position in an array
                 $(newColDiv).append(NoctuaImage); 
             } else if (column[col].name =='Marcus') { 
-                marcusPosition.push.apply(marcusPosition, [[row][0], [col][0]]); // Put player 2 position in an array
+                marcusPosition.push.apply(marcusPosition, [[row][0], [col][0]]); // Put marcus position in an array
                 $(newColDiv).append(MarcusImage); 
             }
         }
@@ -199,19 +199,25 @@ function playerTurn(playerPosition, mainPlayer, otherPlayer) {
     });
     // Movements
     Object.values(directions).forEach(function(directionsArrays) {
+        // Store row and column around player //
         const nextRow = directionsArrays[0] + playerPosition[0]
         const nextCol = directionsArrays[1] + playerPosition[1]
+        // Do nothing to cases outside the grid and obstacle cases //
         if (nextRow < 0 || nextRow > gridContent.length - 1 || nextCol < 0 || nextCol > gridContent[0].length || gridContent[nextRow][nextCol] instanceof Obstacle) {
             return;
         } 
         if (gridContent[nextRow][nextCol] === undefined || gridContent[nextRow][nextCol] instanceof Weapon) {
             $(`#grid-cell-${nextRow}-${nextCol}`).addClass("highlight");
+            // Allow click on cases //
             $(`#grid-cell-${nextRow}-${nextCol}`).one( "click", function(){
+                // Click on a weapon //
                 if (gridContent[nextRow][nextCol] instanceof Weapon){
                     weaponClicked (nextRow, nextCol, mainPlayer, playerPosition);
                 }
+                // Movement function //
                 move (nextRow, nextCol, mainPlayer, playerPosition);
                 $(".grid-cell").off();
+                // Check if players have to fight
                 checkFight();
                 const willFight = checkFight()
                 if (willFight){
