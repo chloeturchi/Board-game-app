@@ -1,7 +1,4 @@
-"use strict";
-
 export default class Map { 
-  
   constructor() {
   }
 

@@ -1,3 +1,5 @@
+"use strict";
+
 import Map from './map.js'
 import Obstacle from './obstacle.js'
 import Weapon from './weapon.js'
@@ -52,11 +54,9 @@ $("#marcusTitle").append(marcus.name + "<br><br>", MarcusImage);
 ////////////////////////////// CREATE MAP ARRAY //////////////////////////////
 const gridContent = gameMap.createArray(10,10);
 
-////////////////////////////// CHOOSE INITIAL VALUES //////////////////////////////
-// Choose the number of obstacles in the grid //
-const obstacleNumber = 10; 
-// Choose the number of moves a player can do //
-const moveNumber = 3;
+////////////////////////////// CHANGE VALUES //////////////////////////////
+const obstacleNumber = 10; // Choose the number of obstacles in the grid //
+const moveNumber = 3; // Choose the number of moves a player can do //
 
 ////////////////////////////// ARRAYS //////////////////////////////
 // Players positions on grid //
@@ -79,7 +79,7 @@ function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
 
-////////////////////////////// ADD OBSTACLES MAIN ARRAY //////////////////////////////
+////////////////////////////// ADD OBSTACLES IN GRIDCONTENT ARRAY //////////////////////////////
 for (let i = 0; i < obstacleArr.length; i++){
     function addObstacles(){
         const randomRow = randomNumber();
@@ -92,7 +92,7 @@ for (let i = 0; i < obstacleArr.length; i++){
     };  addObstacles()
 };
 
-////////////////////////////// ADD WEAPONS IN MAIN ARRAY //////////////////////////////
+////////////////////////////// ADD WEAPONS IN GRIDCONTENT ARRAY //////////////////////////////
 for (let i = 0; i < weaponArr.length; i++){
     function addWeapons(){
         const randomRow = randomNumber();
@@ -105,7 +105,7 @@ for (let i = 0; i < weaponArr.length; i++){
     };  addWeapons();
 };
 
-////////////////////////////// ADD PLAYERS IN MAIN ARRAY //////////////////////////////
+////////////////////////////// ADD PLAYERS IN GRIDCONTENT ARRAY  //////////////////////////////
 for (let i = 0; i < playerArr.length; i++){
     function addPlayer(){
         const randomRow = randomNumber();
@@ -172,22 +172,22 @@ const directions = {
     up: [-1, 0]
 };
 
-// Counter 
-let movementCounter = 0 // Count number of moves per turn (here it is 3 maximum)
+// Variables and arrays //
+let movementCounter = 0 // Count number of moves per turn
 
-let NoctuaPreviousWeapon = []; // Store where (array col and row) to leave previous weapon
+let NoctuaPreviousWeapon = []; // Store where (col and row) to leave previous weapon
 let NoctuaWeaponCounter = 0 // If counter = 2, leave behind the previous weapon thanks to stored datas
 
 let MarcusPreviousWeapon = []; // Store where (col and row) to leave previous weapon
 let MarcusWeaponCounter = 0 // If counter = 2, leave behind the previous weapon thanks to stored datas
 
 
-// Init first player playerTurn //
+// Initialize first player playerTurn //
 playerTurn(noctuaPosition, noctua, marcus);
 
 // Global function for player turns //
 function playerTurn(playerPosition, mainPlayer, otherPlayer) {
-    // Init Stop turn button
+    // Stop turn button
     $(".stopTurnContainer").empty();
     $(".stopTurnContainer").append("<div class='block'><h3>Stop your turn</h3><button class='stopTurnBtn'>Stop here</button></div>");
     $(".stopTurnBtn").click(function(){
@@ -259,7 +259,7 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
     }
 }
 
-// What to do when click on a case //
+// movement function //
 function move (nextRow, nextCol, mainPlayer, playerPosition){
     $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
     $(`#grid-cell-${nextRow}-${nextCol}`).append(playerImages[mainPlayer.name + "Image"]); // Ajouter L'image du player sur la case cliquée
@@ -271,7 +271,7 @@ function move (nextRow, nextCol, mainPlayer, playerPosition){
     playerPosition[1] = nextCol;
 }
 
-// Put previousweapon in previous case //
+// leave previous weapon in the right case //
 function leavePreviousWeapon(mainPlayer){
     if (mainPlayer == noctua && NoctuaWeaponCounter === 1){
         NoctuaWeaponCounter = NoctuaWeaponCounter + 1
@@ -301,7 +301,7 @@ function checkFight () {
 /************************************* STEP 3 : FIGHT *************************************/
 
 ////////////////////////////// FIGHT //////////////////////////////
-// Defense variable for fight //
+// Variable //
 let defense = false;
 
 // Display fight container and call fight function //
@@ -315,6 +315,7 @@ function initFight(mainPlayer, otherPlayer){
 function fight(mainPlayer, otherPlayer){
         $(".playerTurn").empty()
         $(".playerTurn").append("<div class='" + mainPlayer.name + "Turn'>" + mainPlayer.name + "' turn : </div>");
+        // Attack button //
         $(".attack").click(function(){
             $(".fightDescription").empty();
             if (defense == true){
@@ -336,6 +337,7 @@ function fight(mainPlayer, otherPlayer){
                 return changeTurnFight(mainPlayer, otherPlayer);
             }
         });
+        // Defend button //
         $(".defend").click(function(){
             $(".fightDescription").empty();
             $(".fightDescription").append("<p>" + mainPlayer.name + " choose to defend himself for next round</p>");
@@ -346,7 +348,7 @@ function fight(mainPlayer, otherPlayer){
         });
 }
 
-// Change the player turn during fight
+// Change player turn during fight
 function changeTurnFight(mainPlayer, otherPlayer) {
     if (mainPlayer == noctua){
         fight(marcus, noctua);
@@ -355,7 +357,7 @@ function changeTurnFight(mainPlayer, otherPlayer) {
     }
 }
 
-// What to do when player attack
+// Attack function
 function displayAttack (divisionNumber, mainPlayer, otherPlayer){
     otherPlayer.life = otherPlayer.life - (mainPlayer.weapon.damage/divisionNumber)
     $("#"+otherPlayer.name+"Life").empty();
@@ -364,7 +366,7 @@ function displayAttack (divisionNumber, mainPlayer, otherPlayer){
     $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
 }
 
-// What to do when the function end
+// End the fight
 function displayEndFight (mainPlayer, otherPlayer){
     $(".attack").off();
     $(".defend").off();
