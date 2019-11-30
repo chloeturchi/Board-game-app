@@ -181,7 +181,6 @@ let NoctuaWeaponCounter = 0 // If counter = 2, leave behind the previous weapon 
 let MarcusPreviousWeapon = []; // Store where (col and row) to leave previous weapon
 let MarcusWeaponCounter = 0 // If counter = 2, leave behind the previous weapon thanks to stored datas
 
-
 // Initialize first player playerTurn //
 playerTurn(noctuaPosition, noctua, marcus);
 
@@ -371,7 +370,7 @@ function displayAttack (divisionNumber, mainPlayer, otherPlayer){
     $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage/divisionNumber) + " damages to "+ otherPlayer.name +"</p>");
     $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
 }
-
+    
 // End the fight
 function displayEndFight (mainPlayer, otherPlayer){
     $(".attack").off();
