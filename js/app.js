@@ -20,36 +20,23 @@ const sword = new Weapon("sword", 24);
 const noctua = new Player("Noctua", 100, dagger);
 const marcus = new Player("Marcus", 100, dagger);
 
-////////////////////////////// IMAGES //////////////////////////////
-const obstacleImage = "<img class='obstacleImg' src='assets/img/obstacle.svg'/>";
-
-const daggerImage = "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>";
-const maceImage = "<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>";
-const axeImage = "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>";
-const swordImage = "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>";
-const weaponImages = { daggerImage, maceImage, axeImage, swordImage }
-
-const NoctuaImage = "<img class='playerImg' id ='noctuaImg' src='assets/img/perso1.svg'/>";
-const MarcusImage = "<img class='playerImg' id ='marcusImg' src='assets/img/perso2.svg'/>";
-const playerImages = { NoctuaImage, MarcusImage }
-
 ////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
 
 // Weapons informations //
 $("#daggerName").append(dagger.name);
-$("#daggerInfo").append(dagger.damage + " points<br>", daggerImage);
+$("#daggerInfo").append(dagger.damage + " points<br>", "<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
 $("#maceName").append(mace.name);
-$("#maceInfo").append(mace.damage + " points<br>", maceImage) ;
+$("#maceInfo").append(mace.damage + " points<br>", "<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>") ;
 $("#axeName").append(axe.name);
-$("#axeInfo").append(axe.damage + " points<br>", axeImage);
+$("#axeInfo").append(axe.damage + " points<br>", "<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
 $("#swordName").append(sword.name);
-$("#swordInfo").append(sword.damage + " points<br>", swordImage);
+$("#swordInfo").append(sword.damage + " points<br>", "<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
 
 // Players Informations //
-$("#" + noctua.name).append(daggerImage);
-$("#noctuaTitle").append(noctua.name + "<br><br>", NoctuaImage); 
-$("#" + marcus.name).append(daggerImage);
-$("#marcusTitle").append(marcus.name + "<br><br>", MarcusImage); 
+$("#" + noctua.name).append("<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
+$("#noctuaTitle").append(noctua.name + "<br><br>", "<img class='playerImg' id='NoctuaImg' src='assets/img/noctua.svg'/>"); 
+$("#" + marcus.name).append("<img class='weaponImg' id='daggerImg' src='assets/img/dagger.svg'/>");
+$("#marcusTitle").append(marcus.name + "<br><br>", "<img class='playerImg' id='MarcusImg' src='assets/img/marcus.svg'/>"); 
 
 ////////////////////////////// CREATE MAP ARRAY //////////////////////////////
 const gridContent = gameMap.createArray(10,10);
@@ -79,51 +66,37 @@ function randomNumber(){
     return Math.floor(Math.random() * gridContent.length)
 }
 
+////////////////////////////// FUNCTION TO ADD OBSTACLE AND WEAPON IN ARRAY //////////////////////////////
+function addInArray(arr, i){
+    const randomRow = randomNumber();
+    const randomCol = randomNumber();
+    if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) { // Test if value around player in Grid Array has obstacle or player //
+        addInArray(arr, i);
+    } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
+        addInArray(arr, i);
+    } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
+        addInArray(arr, i);
+    } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
+        addInArray(arr, i);
+    } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array //
+        gridContent[randomRow][randomCol] = arr[i];
+    } else {
+        addInArray(arr, i);
+    }
+};
 ////////////////////////////// ADD OBSTACLES IN GRIDCONTENT ARRAY //////////////////////////////
 for (let i = 0; i < obstacleArr.length; i++){
-    function addObstacles(){
-        const randomRow = randomNumber();
-        const randomCol = randomNumber();
-        if (gridContent[randomRow][randomCol] == undefined) {
-            gridContent[randomRow][randomCol] = obstacleArr[i];
-        } else {
-            addObstacles();
-        }
-    };  addObstacles()
+    addInArray(obstacleArr, i);
 };
 
 ////////////////////////////// ADD WEAPONS IN GRIDCONTENT ARRAY //////////////////////////////
 for (let i = 0; i < weaponArr.length; i++){
-    function addWeapons(){
-        const randomRow = randomNumber();
-        const randomCol = randomNumber();
-        if (gridContent[randomRow][randomCol] === undefined) {
-            gridContent[randomRow][randomCol] = weaponArr[i];
-        } else {
-            addWeapons();
-        }
-    };  addWeapons();
+    addInArray(weaponArr, i);
 };
 
 ////////////////////////////// ADD PLAYERS IN GRIDCONTENT ARRAY  //////////////////////////////
 for (let i = 0; i < playerArr.length; i++){
-    function addPlayer(){
-        const randomRow = randomNumber();
-        const randomCol = randomNumber();
-        if (randomRow - 1 !== -1 && gridContent[randomRow - 1][randomCol] !== undefined) { // Test if value around player in Grid Array has obstacle or player //
-            addPlayer();
-        } else if (randomRow + 1 !== gridContent.length && gridContent[randomRow + 1][randomCol] !== undefined) {
-            addPlayer();
-        } else if (randomCol - 1 !== -1 && gridContent[randomRow][randomCol - 1] !== undefined) {
-            addPlayer();
-        } else if (randomCol + 1 !== gridContent.length && gridContent[randomRow][randomCol + 1] !== undefined) {
-            addPlayer();
-        } else if (gridContent[randomRow][randomCol] == undefined){ // Test if the chosen player area is undefined and push in array //
-            gridContent[randomRow][randomCol] = playerArr[i];
-        } else {
-            addPlayer();
-        }
-    } addPlayer();
+    addInArray(playerArr, i)
 };
 
 ////////////////////////////// DISPLAY GRID, OBSTACLES, WEAPONS, PLAYERS //////////////////////////////
@@ -139,22 +112,22 @@ for(let row = 0; row < gridContent.length; row++) {
         newColDiv.setAttribute("class", "grid-cell");
         newRowDiv.appendChild(newColDiv);
         if (column[col] instanceof Obstacle) {
-            $(newColDiv).append(obstacleImage);
+            $(newColDiv).append("<img class='obstacleImg' src='assets/img/obstacle.svg'/>");
         } else if (column[col] instanceof Weapon) {
             if (column[col].name == 'mace') {
-                $(newColDiv).append(maceImage);
+                $(newColDiv).append("<img class='weaponImg' id='maceImg' src='assets/img/mace.svg'/>");
             } else if (column[col].name == 'axe') {
-                $(newColDiv).append(axeImage);
+                $(newColDiv).append("<img class='weaponImg' id='axeImg' src='assets/img/axe.svg'/>");
             } else if (column[col].name == 'sword') {
-                $(newColDiv).append(swordImage);
+                $(newColDiv).append("<img class='weaponImg' id='swordImg' src='assets/img/sword.svg'/>");
             }
         } else if (column[col] instanceof Player) {
             if (column[col].name =='Noctua') { 
                 noctuaPosition.push.apply(noctuaPosition, [[row][0], [col][0]]); // Put noctua position in an array
-                $(newColDiv).append(NoctuaImage); 
+                $(newColDiv).append("<img class='playerImg' id='NoctuaImg' src='assets/img/noctua.svg'/>"); 
             } else if (column[col].name =='Marcus') { 
                 marcusPosition.push.apply(marcusPosition, [[row][0], [col][0]]); // Put marcus position in an array
-                $(newColDiv).append(MarcusImage); 
+                $(newColDiv).append("<img class='playerImg' id='MarcusImg' src='assets/img/marcus.svg'/>"); 
             }
         }
     } 
@@ -252,7 +225,7 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
     $("#" + mainPlayer.name + " img").remove();
     mainPlayer.weapon = gridContent[nextRow][nextCol];
     $(`#grid-cell-${nextRow}-${nextCol}`).empty()
-    $("#" + mainPlayer.name).append(weaponImages[mainPlayer.weapon.name + "Image"]); 
+    $("#" + mainPlayer.name).append("<img class='weaponImg' id='"+mainPlayer.weapon.name+"Img' src='assets/img/"+mainPlayer.weapon.name+".svg'/>"); 
     if (mainPlayer === noctua){
         NoctuaWeaponCounter = 1
         NoctuaPreviousWeapon[0] = nextRow
@@ -267,7 +240,7 @@ function weaponClicked (nextRow, nextCol, mainPlayer){
 // movement function //
 function move (nextRow, nextCol, mainPlayer, playerPosition){
     $(`#grid-cell-${playerPosition[0]}-${playerPosition[1]}`).empty(); // Enlever l'image du player sur l'ancienne case
-    $(`#grid-cell-${nextRow}-${nextCol}`).append(playerImages[mainPlayer.name + "Image"]); // Ajouter L'image du player sur la case cliquée
+    $(`#grid-cell-${nextRow}-${nextCol}`).append("<img class='playerImg' id ='"+mainPlayer.name+"Img' src='assets/img/"+mainPlayer.name+".svg'/>"); // Ajouter L'image du player sur la case cliquée
     gridContent[playerPosition[0]][playerPosition[1]] = undefined// Enlever l'instance player de l'ancienne case
     gridContent[nextRow][nextCol] = mainPlayer
     $("div").removeClass("highlight") // Enlever la classe à la div actuelle   
@@ -282,14 +255,14 @@ function leavePreviousWeapon(mainPlayer){
         NoctuaWeaponCounter = NoctuaWeaponCounter + 1
     } else if (mainPlayer == noctua && NoctuaWeaponCounter === 2){
         gridContent[NoctuaPreviousWeapon[0]][NoctuaPreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${NoctuaPreviousWeapon[0]}-${NoctuaPreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
+        $(`#grid-cell-${NoctuaPreviousWeapon[0]}-${NoctuaPreviousWeapon[1]}`).append("<img class='weaponImg' id='"+mainPlayer.previousWeapon.name+"Img' src='assets/img/"+mainPlayer.previousWeapon.name+".svg'/>");
         NoctuaWeaponCounter = 0;
     } 
     if (mainPlayer == marcus && MarcusWeaponCounter === 1){
         MarcusWeaponCounter = MarcusWeaponCounter + 1
     } else if (mainPlayer == marcus && MarcusWeaponCounter === 2){
         gridContent[MarcusPreviousWeapon[0]][MarcusPreviousWeapon[1]] = mainPlayer.previousWeapon;
-        $(`#grid-cell-${MarcusPreviousWeapon[0]}-${MarcusPreviousWeapon[1]}`).append(weaponImages[mainPlayer.previousWeapon.name + "Image"]);
+        $(`#grid-cell-${MarcusPreviousWeapon[0]}-${MarcusPreviousWeapon[1]}`).append("<img class='weaponImg' id='"+mainPlayer.previousWeapon.name+"Img' src='assets/img/"+mainPlayer.previousWeapon.name+".svg'/>");
         MarcusWeaponCounter = 0;
     }
 }
@@ -370,7 +343,7 @@ function displayAttack (divisionNumber, mainPlayer, otherPlayer){
     $(".fightDescription").append("<p> " + mainPlayer.name + " does " + (mainPlayer.weapon.damage/divisionNumber) + " damages to "+ otherPlayer.name +"</p>");
     $(".fightDescription").append("<p>" + otherPlayer.name + " has now " + otherPlayer.life + " life points</p>");
 }
-    
+
 // End the fight
 function displayEndFight (mainPlayer, otherPlayer){
     $(".attack").off();

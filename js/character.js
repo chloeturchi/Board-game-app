@@ -4,5 +4,6 @@ export default class Player {
         this.life = life;
         this.weapon = weapon;
         this.previousWeapon = null;
+        this.position = [];
     }
 };

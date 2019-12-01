@@ -3,4 +3,5 @@ export default class Weapon {
         this.name = name;
         this.damage = damage;
     }
+
 };
