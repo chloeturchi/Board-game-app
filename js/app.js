@@ -16,8 +16,8 @@ const mace = new Weapon("mace", 14);
 const axe = new Weapon("axe", 20);
 const sword = new Weapon("sword", 24);
 
-const noctua = new Player("Noctua", 100, dagger);
-const marcus = new Player("Marcus", 100, dagger);
+const noctua = new Player("noctua", 100, dagger);
+const marcus = new Player("marcus", 100, dagger);
 
 ////////////////////////////// DISPLAY GAME INFORMATION//////////////////////////////
 
