@@ -14,13 +14,6 @@
 - POO
 - jQuery
 
-## Installation
-
-    Install the dependencies from the package.json file with npm install
-    - jasmine
-    - todomvc-app-css
-    - todomvc-common
-
 ## Build with
 
 * [Visual Studio Code](https://code.visualstudio.com/) - text editor
