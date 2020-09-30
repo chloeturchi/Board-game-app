@@ -1,4 +1,4 @@
-# Todo List - [school project]
+# Board Game - [school project]
 
 ## Introduction
 
